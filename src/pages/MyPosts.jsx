@@ -3,16 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar.jsx";
 import MyPostList from "../components/MyPostList.jsx";
-import { getMyPostsAPI, deletePostAPI, updatePostAPI } from "../config/post.api.js";
+import { getMyPostsAPI, deletePostAPI, updatePostAPI, appealPostAPI } from "../config/post.api.js";
 
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
     
-    
+    // Edit States
     const [editingPost, setEditingPost] = useState(null); 
     const [editContent, setEditContent] = useState("");
     const [editImage, setEditImage] = useState(null);
     const [updateLoading, setUpdateLoading] = useState(false);
+    
+    // Appeal States
+    const [appealModal, setAppealModal] = useState({ isOpen: false, postId: null, clarification: "" });
+    const [appealLoading, setAppealLoading] = useState(false);
     
     const navigate = useNavigate();
 
@@ -41,7 +45,6 @@ const MyPosts = () => {
         }
     };
 
-    
     const handleEdit = (postId) => {
         const postToEdit = posts.find(p => p._id === postId);
         setEditingPost(postToEdit);
@@ -56,20 +59,41 @@ const MyPosts = () => {
         try {
             const formData = new FormData();
             if (editContent) formData.append("content", editContent);
-            if (editImage) formData.append("image", editImage); // Agar nayi image chuni hai toh
+            if (editImage) formData.append("image", editImage); 
 
             const response = await updatePostAPI(editingPost._id, formData);
             toast.success("Post updated successfully!");
             
-           
             setPosts(posts.map(p => p._id === editingPost._id ? response.data.data : p));
-            
-            
             setEditingPost(null);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update post");
         } finally {
             setUpdateLoading(false);
+        }
+    };
+
+    // --- NEW APPEAL FUNCTIONS --- //
+    const handleAppealClick = (postId) => {
+        setAppealModal({ isOpen: true, postId, clarification: "" });
+    };
+
+    const handleAppealSubmit = async (e) => {
+        e.preventDefault();
+        if (!appealModal.clarification.trim()) return toast.warning("Clarification is required!");
+
+        setAppealLoading(true);
+        try {
+            const response = await appealPostAPI(appealModal.postId, appealModal.clarification);
+            toast.success("Appeal submitted successfully!");
+            
+            // Update UI without refresh
+            setPosts(posts.map(p => p._id === appealModal.postId ? response.data.data : p));
+            setAppealModal({ isOpen: false, postId: null, clarification: "" });
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to submit appeal");
+        } finally {
+            setAppealLoading(false);
         }
     };
 
@@ -89,9 +113,11 @@ const MyPosts = () => {
                     showActions={true} 
                     onDelete={handleDelete} 
                     onEdit={handleEdit} 
+                    onAppeal={handleAppealClick} // Added the appeal prop
                 />
             </div>
 
+            {/* EDIT MODAL */}
             {editingPost && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
                     <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg">
@@ -130,6 +156,43 @@ const MyPosts = () => {
                                     className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:bg-gray-400"
                                 >
                                     {updateLoading ? "Updating..." : "Save Changes"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* APPEAL MODAL */}
+            {appealModal.isOpen && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg">
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">Submit an Appeal</h2>
+                        <p className="text-sm text-gray-500 mb-4">Please explain why you think your post should be restored.</p>
+                        
+                        <form onSubmit={handleAppealSubmit}>
+                            <textarea
+                                value={appealModal.clarification}
+                                onChange={(e) => setAppealModal({ ...appealModal, clarification: e.target.value })}
+                                className="w-full border border-gray-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-blue-500 resize-none"
+                                rows="4"
+                                placeholder="Write your clarification to the admin..."
+                            />
+                            
+                            <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setAppealModal({ isOpen: false, postId: null, clarification: "" })}
+                                    className="px-5 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-full transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={appealLoading}
+                                    className="bg-red-600 text-white px-6 py-2 rounded-full font-medium hover:bg-red-700 transition disabled:opacity-50"
+                                >
+                                    {appealLoading ? "Submitting..." : "Submit Appeal"}
                                 </button>
                             </div>
                         </form>

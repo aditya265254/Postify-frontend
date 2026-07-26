@@ -26,3 +26,19 @@ export const updatePostAPI = (postId, formData) => {
         headers: { "Content-Type": "multipart/form-data" }
     });
 };
+
+export const appealPostAPI = (postId, userClarification) => {
+    return api.patch(`/posts/appeal-post/${postId}`, { userClarification });
+};
+
+// --- ADMIN MODERATION APIs ---
+
+export const getAdminUserPostsAPI = (userId) => api.get(`posts/admin/user-post/${userId}`); 
+
+
+export const softDeletePostAPI = (postId, reason) => api.patch(`/posts/soft-delete/${postId}`, { reason });
+
+
+export const restorePostAPI = (postId) => api.patch(`/posts/restore/${postId}`);
+
+export const adminHardDeleteAPI = (postId) => api.delete(`/posts/admin/delete/${postId}`);

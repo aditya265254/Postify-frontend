@@ -1,4 +1,5 @@
 import AdminDashbord from "../pages/AdminDashbord";
+import AdminUserPosts from "../pages/AdminUserPosts"; 
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 
 export const protectedRoutes = [
@@ -9,5 +10,13 @@ export const protectedRoutes = [
         <AdminDashbord />
       </ProtectedAdminRoute>
     )
+  },
+  {
+    path: "/admin/user/:userId",
+    element: (
+      <ProtectedAdminRoute>
+        <AdminUserPosts />
+      </ProtectedAdminRoute>
+    )
   }
-]
+];
