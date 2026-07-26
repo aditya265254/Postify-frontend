@@ -26,7 +26,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
                         <img
                             src={post.imageUrl}
                             alt="Post"
-                            className={`w-full max-h-[400px] object-cover rounded-xl mb-3 ${post.isSoftDeleted ? 'opacity-50' : 'opacity-100'}`}
+                            className={`w-full max-h-100 object-cover rounded-xl mb-3 ${post.isSoftDeleted ? 'opacity-50' : 'opacity-100'}`}
                         />
                     )}
 

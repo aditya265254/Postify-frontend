@@ -5,7 +5,6 @@ import api from '../config/api.js';
 import { getAdminDashboardAPI } from "../config/post.api.js";
 
 const AdminDashboard = () => {
-    // Initial state safe rakhi hai taaki undefined na aaye
     const [data, setData] = useState({ users: [], pendingAppeals: [], totalUsers: 0, totalPosts: 0 });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -16,21 +15,22 @@ const AdminDashboard = () => {
             navigate('/');
             return;
         }
+
+        const fetchAdminData = async () => {
+            try {
+                const response = await getAdminDashboardAPI();
+                if (response.data && response.data.data) {
+                    setData(response.data.data);
+                }
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Failed to fetch admin data");
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchAdminData();
     }, [navigate]);
-
-    const fetchAdminData = async () => {
-        try {
-            const response = await getAdminDashboardAPI(); // Call the api function here
-            if (response.data && response.data.data) {
-                setData(response.data.data);
-            }
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to fetch admin data");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleLogout = () => {
         localStorage.clear();
@@ -41,9 +41,9 @@ const AdminDashboard = () => {
         try {
             await api.patch(`/posts/restore/${postId}`);
             toast.success("Post restored successfully!");
-            fetchAdminData();
+            window.location.reload(); 
         } catch (error) {
-            toast.error("Failed to restore post");
+            toast.error(error.response?.data?.message || "Failed to restore post");
         }
     };
 
@@ -52,9 +52,9 @@ const AdminDashboard = () => {
         try {
             await api.delete(`/posts/admin-delete/${postId}`);
             toast.success("Post permanently deleted");
-            fetchAdminData();
+            window.location.reload(); 
         } catch (error) {
-            toast.error("Failed to delete post");
+            toast.error(error.response?.data?.message || "Failed to delete post");
         }
     };
 
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
 
             <div className="max-w-6xl mx-auto mt-8 px-4 space-y-8">
                 
-                {/* Statistics Cards with Optional Chaining */}
+               
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <p className="text-gray-500 font-medium">Total Users</p>
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {/* Pending Appeals Section */}
+                
                 <div className="bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">📢 User Appeals Requiring Review</h2>
                     
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
                     )}
                 </div>
 
-                {/* User Management List */}
+                
                 <div className="bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
                     <h2 className="text-xl font-bold text-gray-800 mb-6">Registered Users</h2>
                     
