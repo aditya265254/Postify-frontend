@@ -2,7 +2,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit }) => {
     if (!posts || posts.length === 0) {
         return (
             <div className="text-center bg-white p-10 rounded-2xl shadow-sm">
-                <p className="text-gray-500">Koi post nahi mili!</p>
+                <p className="text-gray-500">No post there !</p>
             </div>
         );
     }
@@ -27,7 +27,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit }) => {
                     <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
                         <span>{new Date(post.createdAt).toLocaleString()}</span>
                         
-                        {/* 👇 Magic Yahan Hai: Agar showActions true hoga, tabhi ye buttons dikhenge */}
+                     
                         {showActions && (
                             <div className="flex gap-4">
                                 <button

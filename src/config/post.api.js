@@ -19,3 +19,10 @@ export const deletePostAPI = (postId) => api.delete(`/posts/delet/${postId}`);
 export const getMyPostsAPI = () => api.get("/posts/my-posts");
 
 export const commentPostAPI = (postId, content) => api.patch(`/posts/comment/${postId}`, { content });
+
+
+export const updatePostAPI = (postId, formData) => {
+    return api.patch(`/posts/update/${postId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+    });
+};
