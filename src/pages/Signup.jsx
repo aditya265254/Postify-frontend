@@ -1,77 +1,82 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../config/api.js'; 
 
 const Signup = () => {
-  const [email, setEmail] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [password, setPassword] = useState('')
-  const [error] = useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState({ message: '', statusCode: null });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (loading) return;
 
     setLoading(true);
+    setError({ message: '', statusCode: null });
+
     try {
-      const response = await axios.post(`${backendUrl}/api/auth/signup`, { fullName, email, password });
+      const response = await api.post('/auth/signup', { fullName, email, password });
 
       if (response.data.success) {
-        toast.success(response.data.message || "Registration successful! Please check your email.");
+        toast.success(response.data.message || 'Registration successful! Please check your email.');
         setTimeout(() => {
           navigate('/');
         }, 3000);
       }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "Registration failed. Try again!";
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Registration failed. Try again!';
+      const statusCode = err.response?.data?.statusCode || err.response?.status;
+
+      setError({ message: errorMessage, statusCode });
       toast.error(errorMessage);
     } finally {
-      setLoading(false); 
-  }
-}
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
 
         {error.message && (
-          <p className="text-red-500 text-sm mb-3">
-            {error.statusCode} — {error.message}
+          <p className="text-red-500 text-sm mb-3 text-center">
+            {error.statusCode && `${error.statusCode} — `}{error.message}
           </p>
         )}
 
         <form onSubmit={handleSignUp} className="flex flex-col gap-4">
-          <input 
+          <input
             type="text"
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
-          <input 
+          <input
             type="email"
-            placeholder="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
-          <input 
+          <input
             type="password"
-            placeholder="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
           />
-          
-         
-          <button 
-            type='submit'
+
+          <button
+            type="submit"
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white rounded-lg py-2 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed transition-all"
           >
@@ -84,26 +89,23 @@ const Signup = () => {
                 <span>Registering...</span>
               </>
             ) : (
-              "Sign Up"
+              'Sign Up'
             )}
           </button>
         </form>
 
         <p className="text-center text-sm mt-4">
-          Already have account?
-          <span 
+          Already have an account?
+          <span
             onClick={() => navigate('/')}
-            className="text-blue-500 cursor-pointer ml-1"
+            className="text-blue-500 cursor-pointer ml-1 font-medium hover:underline"
           >
             Login
           </span>
         </p>
-
       </div>
     </div>
-  )
-
-}
-
+  );
+};
 
 export default Signup;

@@ -1,6 +1,6 @@
-import axios from 'axios'
 import  { useEffect, useState } from 'react'
 import {  useNavigate } from 'react-router-dom';
+import api from '../config/api.js';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -21,8 +21,8 @@ useEffect(() => {
     (async () => {
         try {
             const token = localStorage.getItem("token")
-            const response = await axios.get(
-                `${backendUrl}/api/auth/admin/dashbord`,
+            const response = await api.get(
+                `${backendUrl}/auth/admin/dashbord`,
                 { headers: { Authorization: `Bearer ${token}` } }
             )
             setUsers(response.data.data)

@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard'
 import AdminDashbord from './pages/AdminDashbord'
 import VerifyEmail from './pages/VerifyEmail'
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Yeh zaroori hai CSS ke liye
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const ProtectedAdminRoute =  ({ children }) => {
   const token = localStorage.getItem("token")

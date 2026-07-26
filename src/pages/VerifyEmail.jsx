@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react"; // ← useRef joda double render rokne ke liye
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify"; 
+import api from "../config/api";
 
 const VerifyEmail = () => {
     const [searchParams] = useSearchParams();
@@ -28,11 +28,11 @@ const VerifyEmail = () => {
             try {
               
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-                const response = await axios.get(`${backendUrl}/api/auth/verify-email?token=${token}`);
+                const response = await api.get(`${backendUrl}/auth/verify-email?token=${token}`);
 
                 if (response.data.success) {
                     setStatus("Email verified successfully! Redirecting to login...");
-                    toast.success("Email verified successfully!"); // Green toast popup
+                    toast.success("Email verified successfully!"); 
                     
                     setTimeout(() => {
                         navigate("/");
