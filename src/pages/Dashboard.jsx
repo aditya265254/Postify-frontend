@@ -5,11 +5,11 @@ import {
     getFeedPostsAPI, 
     likePostAPI, 
     sharePostAPI,
-    commentPostAPI
+    commentPostAPI,
+    softDeletePostAPI 
 } from "../config/post.api.js"; 
 
 const Dashboard = () => {
-    // Check if user is stored in local storage
     const [user] = useState(() => {
         const savedUser = localStorage.getItem("user");
         return savedUser ? JSON.parse(savedUser) : null;
@@ -20,12 +20,15 @@ const Dashboard = () => {
     const [showCommentBox, setShowCommentBox] = useState({}); 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
+    // State for Admin Soft Delete Modal from Feed
+    const [reasonModal, setReasonModal] = useState({ isOpen: false, postId: null, reason: "" });
+    
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.clear();
         navigate('/');
-        window.location.reload(); // Refresh to clear states
+        window.location.reload(); 
     };
 
     const fetchFeedPosts = async () => {
@@ -38,7 +41,6 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        // Handle Google Auth parsing
         const urlParams = new URLSearchParams(window.location.search);
         const urlToken = urlParams.get('token');
         const urlUser = urlParams.get('user');
@@ -57,19 +59,13 @@ const Dashboard = () => {
                 } else {
                     window.location.href = "/";
                 }
+                
                 return;
             } catch (e) {
                 console.error("User data parse error:", e);
             }
         }
-
-        // Redirect admin users to their specific dashboard
-        if (user?.role === "admin") {
-            navigate('/admin/dashboard');
-            return;
-        }
         
-        // Fetch posts for both logged-in and guest users
         fetchFeedPosts();
     }, [navigate, user]);
 
@@ -84,7 +80,7 @@ const Dashboard = () => {
     };
 
     const handleLike = async (postId) => {
-        if (!requireAuth()) return; // Stop if not logged in
+        if (!requireAuth()) return;
 
         try {
             const response = await likePostAPI(postId);
@@ -108,7 +104,7 @@ const Dashboard = () => {
     };
 
     const handleComment = async (postId) => {
-        if (!requireAuth()) return; // Stop if not logged in
+        if (!requireAuth()) return;
 
         const text = commentTexts[postId];
         if (!text || text.trim() === "") return toast.warning("Comment cannot be empty");
@@ -131,7 +127,7 @@ const Dashboard = () => {
     };
 
     const handleShare = async (postId, postContent) => {
-        if (!requireAuth()) return; // Stop if not logged in
+        if (!requireAuth()) return;
 
         const shareUrl = window.location.origin; 
         try {
@@ -155,6 +151,23 @@ const Dashboard = () => {
         }
     };
 
+    // Handle Admin Soft Delete directly from the Feed
+    const handleAdminFeedSoftDelete = async (e) => {
+        e.preventDefault();
+        if (!reasonModal.reason.trim()) return toast.warning("Please provide a reason");
+
+        try {
+            await softDeletePostAPI(reasonModal.postId, reasonModal.reason);
+            toast.success("Post soft deleted successfully");
+            
+            // Remove the post from the public feed view instantly
+            setPosts(posts.filter(post => post._id !== reasonModal.postId));
+            setReasonModal({ isOpen: false, postId: null, reason: "" });
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Soft delete failed");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 pb-10">
             
@@ -165,7 +178,6 @@ const Dashboard = () => {
                 </h1>
                 
                 <div className="flex items-center gap-4 relative">
-                    {/* Render different UI based on authentication status */}
                     {!user ? (
                         <div className="flex items-center gap-3">
                             <button 
@@ -200,6 +212,23 @@ const Dashboard = () => {
 
                                 {isMenuOpen && (
                                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50">
+                                        
+                                        {/* Admin Dashboard Navigation Option */}
+                                        {user?.role === "admin" && (
+                                            <>
+                                                <button 
+                                                    onClick={() => {
+                                                        setIsMenuOpen(false);
+                                                        navigate('/admin/dashboard');
+                                                    }}
+                                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium"
+                                                >
+                                                    🛡️ Admin Dashboard
+                                                </button>
+                                                <hr className="my-1 border-gray-100" />
+                                            </>
+                                        )}
+
                                         <button 
                                             onClick={() => {
                                                 setIsMenuOpen(false);
@@ -279,6 +308,18 @@ const Dashboard = () => {
                                     </button>
                                 </div>
 
+                                {/* Admin Moderation button directly on the feed */}
+                                {user?.role === "admin" && (
+                                    <div className="mt-3 flex justify-end">
+                                        <button 
+                                            onClick={() => setReasonModal({ isOpen: true, postId: post._id, reason: "" })}
+                                            className="bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-lg text-xs font-bold transition"
+                                        >
+                                            ⚠️ Admin: Soft Delete Post
+                                        </button>
+                                    </div>
+                                )}
+
                                 {/* Comment Section */}
                                 {showCommentBox[post._id] && (
                                     <div className="mt-4 bg-gray-50 p-4 rounded-xl">
@@ -321,6 +362,42 @@ const Dashboard = () => {
                     )}
                 </div>
             </div>
+
+            {/* Admin Soft Delete Reason Modal */}
+            {reasonModal.isOpen && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+                    <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl">
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">Provide Reason</h3>
+                        <p className="text-sm text-gray-500 mb-4">This reason will be visible to the user.</p>
+                        
+                        <form onSubmit={handleAdminFeedSoftDelete}>
+                            <textarea
+                                value={reasonModal.reason}
+                                onChange={(e) => setReasonModal({ ...reasonModal, reason: e.target.value })}
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-red-500 mb-4 resize-none"
+                                rows="3"
+                                placeholder="E.g., Violates community guidelines..."
+                                required
+                            />
+                            <div className="flex justify-end gap-3">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setReasonModal({ isOpen: false, postId: null, reason: "" })}
+                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit"
+                                    className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+                                >
+                                    Confirm Soft Delete
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
