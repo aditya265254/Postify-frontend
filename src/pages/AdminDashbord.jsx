@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../config/api.js';
+import { getAdminDashboardAPI } from "../config/post.api.js";
 
 const AdminDashboard = () => {
+    // Initial state safe rakhi hai taaki undefined na aaye
     const [data, setData] = useState({ users: [], pendingAppeals: [], totalUsers: 0, totalPosts: 0 });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -19,8 +21,10 @@ const AdminDashboard = () => {
 
     const fetchAdminData = async () => {
         try {
-            const response = await api.get('/auth/admin/dashbord'); // Match your backend route
-            setData(response.data.data);
+            const response = await getAdminDashboardAPI(); // Call the api function here
+            if (response.data && response.data.data) {
+                setData(response.data.data);
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to fetch admin data");
         } finally {
@@ -33,24 +37,22 @@ const AdminDashboard = () => {
         navigate('/');
     };
 
-    // Quick action from Admin Dashboard: Restore post directly
     const handleRestore = async (postId) => {
         try {
             await api.patch(`/posts/restore/${postId}`);
             toast.success("Post restored successfully!");
-            fetchAdminData(); // Refresh data
+            fetchAdminData();
         } catch (error) {
             toast.error("Failed to restore post");
         }
     };
 
-    // Quick action from Admin Dashboard: Permanent delete
     const handleHardDelete = async (postId) => {
         if (!window.confirm("Permanently delete this post?")) return;
         try {
             await api.delete(`/posts/admin-delete/${postId}`);
             toast.success("Post permanently deleted");
-            fetchAdminData(); // Refresh data
+            fetchAdminData();
         } catch (error) {
             toast.error("Failed to delete post");
         }
@@ -62,7 +64,6 @@ const AdminDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 pb-12">
-            {/* Admin Navbar */}
             <nav className="bg-gray-900 text-white shadow-md px-8 py-4 flex justify-between items-center sticky top-0 z-50">
                 <div className="flex items-center gap-6">
                     <h1 className="text-2xl font-extrabold tracking-tight">
@@ -85,27 +86,27 @@ const AdminDashboard = () => {
 
             <div className="max-w-6xl mx-auto mt-8 px-4 space-y-8">
                 
-                {/* Platform Statistics Section */}
+                {/* Statistics Cards with Optional Chaining */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <p className="text-gray-500 font-medium">Total Users</p>
-                        <h3 className="text-3xl font-bold text-gray-900 mt-2">{data.totalUsers}</h3>
+                        <h3 className="text-3xl font-bold text-gray-900 mt-2">{data?.totalUsers || 0}</h3>
                     </div>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <p className="text-gray-500 font-medium">Pending Appeals</p>
-                        <h3 className="text-3xl font-bold text-yellow-600 mt-2">{data.pendingAppeals?.length || 0}</h3>
+                        <h3 className="text-3xl font-bold text-yellow-600 mt-2">{data?.pendingAppeals?.length || 0}</h3>
                     </div>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                         <p className="text-gray-500 font-medium">Total Posts (Platform)</p>
-                        <h3 className="text-3xl font-bold text-blue-600 mt-2">{data.totalPosts}</h3>
+                        <h3 className="text-3xl font-bold text-blue-600 mt-2">{data?.totalPosts || 0}</h3>
                     </div>
                 </div>
 
-                {/* 🚨 PENDING APPEALS SECTION (Centralized Queue) */}
+                {/* Pending Appeals Section */}
                 <div className="bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">📢 User Appeals Requiring Review</h2>
                     
-                    {(!data.pendingAppeals || data.pendingAppeals.length === 0) ? (
+                    {(!data?.pendingAppeals || data.pendingAppeals.length === 0) ? (
                         <p className="text-gray-500 text-sm py-4 bg-gray-50 text-center rounded-xl">No pending appeals right now.</p>
                     ) : (
                         <div className="space-y-4">
@@ -147,7 +148,7 @@ const AdminDashboard = () => {
                 <div className="bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
                     <h2 className="text-xl font-bold text-gray-800 mb-6">Registered Users</h2>
                     
-                    {data.users.length === 0 ? (
+                    {(!data?.users || data.users.length === 0) ? (
                         <p className="text-gray-500 text-center py-4">No users found.</p>
                     ) : (
                         <ul className="divide-y divide-gray-100">

@@ -6,7 +6,8 @@ import {
     likePostAPI, 
     sharePostAPI,
     commentPostAPI,
-    softDeletePostAPI 
+    softDeletePostAPI, 
+    getMyPostsAPI
 } from "../config/post.api.js"; 
 
 const Dashboard = () => {
@@ -40,7 +41,7 @@ const Dashboard = () => {
         }
     };
 
-    useEffect(() => {
+   useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const urlToken = urlParams.get('token');
         const urlUser = urlParams.get('user');
@@ -67,9 +68,21 @@ const Dashboard = () => {
         }
         
         fetchFeedPosts();
+
+        // 🚨 NEW: Check if user has any soft-deleted posts without an appeal upon login
+        if (user && user.role !== "admin") {
+            getMyPostsAPI().then(res => {
+                const softDeletedPosts = res.data.data.filter(p => p.isSoftDeleted && !p.userClarification);
+                if (softDeletedPosts.length > 0) {
+                    toast.warning(`⚠️ Notice: ${softDeletedPosts.length} of your post(s) were removed by an admin. Check 'My Posts' to appeal.`, {
+                        autoClose: false 
+                    });
+                }
+            }).catch(() => {});
+        }
     }, [navigate, user]);
 
-    // Reusable function to check authentication before interaction
+  
     const requireAuth = () => {
         if (!user) {
             toast.info("Please login to interact with posts.");
