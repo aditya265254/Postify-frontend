@@ -2,20 +2,20 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import { toast } from 'react-toastify'; // ← Toast import kiya
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false); // ← Loading state jodi
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (loading) return; // 🔄 Double click se bachane ke liye
+    if (loading) return; 
 
-    setLoading(true); // Loading shuru
+    setLoading(true); 
     try {
       const response = await axios.post(`${backendUrl}/api/auth/login`, { email, password })
       
@@ -23,7 +23,7 @@ const Login = () => {
       localStorage.setItem("role", response.data.data.user.role)
       localStorage.setItem("user", JSON.stringify(response.data.data.user))
       
-      toast.success("Login successful!"); // Sahi login par green toast
+      toast.success("Login successful!"); 
 
       if (response.data.data.user.role === "admin") {
         navigate("/admin/dashboard")
@@ -40,10 +40,10 @@ const Login = () => {
         statusCode: statusCode
       })
 
-      // 🚨 Master Stroke: Error aate hi screen par red popup chhap do!
+      
       toast.error(errorMessage);
     } finally {
-      setLoading(false); // ✅ Request puri hote hi loader band
+      setLoading(false);
     }
   }
 
@@ -89,7 +89,7 @@ const Login = () => {
                     className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 
-                {/* Spinner logic ke saath updated button */}
+               
                 <button 
                     type='submit'
                     disabled={loading}

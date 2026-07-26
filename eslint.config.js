@@ -17,5 +17,9 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+        ...reactHooks.configs.recommended.rules,
+        'react-refresh/only-export-components': 'off',  
+    }
   },
 ])

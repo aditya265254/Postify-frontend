@@ -14,9 +14,9 @@ const Signup = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault()
-    if (loading) return; // 🔄 Double click hone se bachane ke liye
+    if (loading) return;
 
-    setLoading(true); // Loading chalu
+    setLoading(true);
     try {
       const response = await axios.post(`${backendUrl}/api/auth/signup`, { fullName, email, password });
 
@@ -30,9 +30,9 @@ const Signup = () => {
       const errorMessage = error.response?.data?.message || "Registration failed. Try again!";
       toast.error(errorMessage);
     } finally {
-      setLoading(false); // ✅ Chahe error aaye ya success, loader yahan aakar ruk jayega
-    }
+      setLoading(false); 
   }
+}
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -69,7 +69,7 @@ const Signup = () => {
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           
-          {/* Spinner layout ke saath updated button */}
+         
           <button 
             type='submit'
             disabled={loading}
@@ -102,6 +102,8 @@ const Signup = () => {
       </div>
     </div>
   )
+
 }
+
 
 export default Signup;
