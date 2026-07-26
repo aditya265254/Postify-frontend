@@ -97,7 +97,7 @@ const Signup = () => {
         <p className="text-center text-sm mt-4">
           Already have an account?
           <span
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/login')}
             className="text-blue-500 cursor-pointer ml-1 font-medium hover:underline"
           >
             Login

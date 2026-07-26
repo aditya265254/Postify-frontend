@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../config/api.js'; 
 
-
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +20,6 @@ const Login = () => {
 
     try {
       const response = await api.post('/auth/login', { email, password });
-
       const { token, user } = response.data.data;
 
       localStorage.setItem('token', token);
@@ -31,13 +28,13 @@ const Login = () => {
 
       toast.success('Login successful!');
 
+      // Redirect admin to admin panel, normal user to home feed
       if (user.role === 'admin') {
         navigate('/admin/dashboard');
       } else {
-        navigate('/dashboard');
+        navigate('/'); 
       }
     } catch (err) {
-     
       const errorMessage = err.response?.data?.message || 'Something went wrong';
       const statusCode = err.response?.data?.statusCode || err.response?.status;
 
@@ -52,10 +49,10 @@ const Login = () => {
     }
   };
 
-const handleGoogleLogin = () => {
-    const baseURL = api.defaults.baseURL 
-    window.location.href = `${baseURL}/auth/google`
-  }
+  const handleGoogleLogin = () => {
+    const baseURL = api.defaults.baseURL;
+    window.location.href = `${baseURL}/auth/google`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -116,7 +113,7 @@ const handleGoogleLogin = () => {
         </form>
 
         <p className="text-center text-sm mt-4">
-          Account nahi h?
+          Don't have an account?
           <span
             onClick={() => navigate('/signup')}
             className="text-blue-500 cursor-pointer ml-1 font-medium hover:underline"

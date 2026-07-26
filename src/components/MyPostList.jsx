@@ -20,7 +20,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit }) => {
                         <img
                             src={post.imageUrl}
                             alt="Post"
-                            className="w-full max-h-[400px] object-cover rounded-xl mb-3"
+                            className="w-full max-h-100 object-cover rounded-xl mb-3"
                         />
                     )}
 

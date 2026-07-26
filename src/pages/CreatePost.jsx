@@ -39,7 +39,7 @@ const CreatePost = () => {
             toast.success("Post created!");
             setContent("");
             setImage(null);
-            e.target.reset(); // File input clear
+            e.target.reset(); 
             fetchMyPosts();  
         } catch {
             toast.error("Post create failed");
