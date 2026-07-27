@@ -2,6 +2,7 @@
 
 ![React](https://img.shields.io/badge/React-v19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-v6-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-%3E%3D8.0-F69220?style=for-the-badge&logo=pnpm&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![React Router](https://img.shields.io/badge/React_Router-v7-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-v1-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
@@ -14,29 +15,29 @@
 
 ```mermaid
 flowchart TD
-    User([User / Admin]) --> Router[React Router DOM]
+    User(["User / Admin"]) --> Router["React Router DOM"]
     
-    subgraph Public & Auth Routes
-        Router --> Feed[Dashboard.jsx - Public Feed]
-        Router --> Login[Login.jsx]
-        Router --> Signup[Signup.jsx]
-        Router --> Verify[VerifyEmail.jsx]
+    subgraph "Public & Auth Routes"
+        Router --> Feed["Dashboard.jsx - Public Feed"]
+        Router --> Login["Login.jsx"]
+        Router --> Signup["Signup.jsx"]
+        Router --> Verify["VerifyEmail.jsx"]
     end
 
-    subgraph Protected User Routes
-        Router --> Create[CreatePost.jsx]
-        Router --> MyPosts[MyPosts.jsx - Moderation & Appeals]
+    subgraph "Protected User Routes"
+        Router --> Create["CreatePost.jsx"]
+        Router --> MyPosts["MyPosts.jsx - Moderation & Appeals"]
     end
 
-    subgraph Protected Admin Routes
-        Router --> AdminGuard{ProtectedAdminRoute}
-        AdminGuard -->|Role == Admin| AdminDash[AdminDashbord.jsx - Analytics & Appeals Queue]
-        AdminGuard -->|Role == Admin| AdminUserPosts[AdminUserPosts.jsx - User Post Moderation]
-        AdminGuard -->|Role != Admin| Redirect[/dashboard]
+    subgraph "Protected Admin Routes"
+        Router --> AdminGuard{"ProtectedAdminRoute"}
+        AdminGuard -->|Role == Admin| AdminDash["AdminDashbord.jsx - Analytics & Appeals Queue"]
+        AdminGuard -->|Role == Admin| AdminUserPosts["AdminUserPosts.jsx - User Post Moderation"]
+        AdminGuard -->|Role != Admin| Redirect["Redirect to /dashboard"]
     end
 
-    subgraph Network Layer
-        Axios[Axios Instance - config/api.js] -->|Inject Authorization: Bearer Token| BackendAPI[(Postify Backend API)]
+    subgraph "Network Layer"
+        Axios["Axios Instance - config/api.js"] -->|Inject Authorization: Bearer Token| BackendAPI[("Postify Backend API")]
     end
 
     Feed --> Axios
@@ -125,24 +126,26 @@ VITE_BACKEND_URL=http://localhost:3000/api/v1
 
 ## 🚦 Getting Started & Local Development
 
+> ⚡ **Package Manager**: This project uses **`pnpm`** for faster dependency installation, disk efficiency, and better performance.
+
 ```bash
 # 1. Clone & navigate to frontend directory
 cd authFrontend
 
-# 2. Install dependencies
-npm install
+# 2. Install dependencies using pnpm
+pnpm install
 
 # 3. Create .env file from template
 cp .env.example .env
 
 # 4. Start Vite development server
-npm run dev
+pnpm run dev
 
 # 5. Build production bundle
-npm run build
+pnpm run build
 
 # 6. Preview production build locally
-npm run preview
+pnpm run preview
 ```
 
 ---
