@@ -8,13 +8,13 @@ import { getMyPostsAPI, deletePostAPI, updatePostAPI, appealPostAPI } from "../c
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
     
-    // Edit States
+   
     const [editingPost, setEditingPost] = useState(null); 
     const [editContent, setEditContent] = useState("");
     const [editImage, setEditImage] = useState(null);
     const [updateLoading, setUpdateLoading] = useState(false);
     
-    // Appeal States
+   
     const [appealModal, setAppealModal] = useState({ isOpen: false, postId: null, clarification: "" });
     const [appealLoading, setAppealLoading] = useState(false);
     
@@ -73,7 +73,6 @@ const MyPosts = () => {
         }
     };
 
-    // --- NEW APPEAL FUNCTIONS --- //
     const handleAppealClick = (postId) => {
         setAppealModal({ isOpen: true, postId, clarification: "" });
     };
@@ -87,7 +86,7 @@ const MyPosts = () => {
             const response = await appealPostAPI(appealModal.postId, appealModal.clarification);
             toast.success("Appeal submitted successfully!");
             
-            // Update UI without refresh
+            
             setPosts(posts.map(p => p._id === appealModal.postId ? response.data.data : p));
             setAppealModal({ isOpen: false, postId: null, clarification: "" });
         } catch (error) {
@@ -113,7 +112,7 @@ const MyPosts = () => {
                     showActions={true} 
                     onDelete={handleDelete} 
                     onEdit={handleEdit} 
-                    onAppeal={handleAppealClick} // Added the appeal prop
+                    onAppeal={handleAppealClick} 
                 />
             </div>
 
@@ -163,7 +162,7 @@ const MyPosts = () => {
                 </div>
             )}
 
-            {/* APPEAL MODAL */}
+           
             {appealModal.isOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
                     <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg">

@@ -122,7 +122,7 @@ const Dashboard = () => {
         }),
       );
     } catch (error) {
-      toast.error(error.response?.data?.message || "Like failed");
+      toast.error(error.response?.data?.message || "Plz try again after some time too many attempts");
     }
   };
 
