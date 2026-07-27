@@ -153,4 +153,3 @@ pnpm run preview
 ## 📄 License & Author
 
 - **Author**: Aditya Singh
-- **License**: MIT
