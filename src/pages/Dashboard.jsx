@@ -8,6 +8,7 @@ import {
   commentPostAPI,
   softDeletePostAPI,
   getMyPostsAPI,
+  logoutAPI,
 } from "../config/post.api.js";
 
 const Dashboard = () => {
@@ -28,7 +29,12 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutAPI();
+    } catch {
+      // ignore
+    }
     localStorage.clear();
     navigate("/");
     window.location.reload();
@@ -102,27 +108,58 @@ const Dashboard = () => {
   const handleLike = async (postId) => {
     if (!requireAuth()) return;
 
+    const currentUserId = user?._id?.toString();
+
+    // 1. Optimistic UI update (immediate response on click)
+    setPosts((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post._id === postId) {
+          const likesArr = Array.isArray(post.likes)
+            ? post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString()))
+            : [];
+          const alreadyLiked = likesArr.includes(currentUserId);
+          const updatedLikes = alreadyLiked
+            ? likesArr.filter((id) => id !== currentUserId)
+            : [...likesArr, currentUserId];
+
+          return {
+            ...post,
+            likes: updatedLikes,
+            likesCount: updatedLikes.length,
+            isLiked: !alreadyLiked,
+          };
+        }
+        return post;
+      }),
+    );
+
     try {
       const response = await likePostAPI(postId);
-      const { isLiked } = response.data.data;
+      const { isLiked, likesCount, likes } = response.data.data;
 
-      setPosts(
-        posts.map((post) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
           if (post._id === postId) {
-            let updatedLikes = [...(post.likes || [])];
-            if (isLiked) {
-              if (!updatedLikes.includes(user?._id))
-                updatedLikes.push(user?._id);
-            } else {
-              updatedLikes = updatedLikes.filter((id) => id !== user?._id);
-            }
-            return { ...post, likes: updatedLikes };
+            return {
+              ...post,
+              likes: likes || post.likes,
+              likesCount: likesCount !== undefined ? likesCount : post.likes?.length,
+              isLiked: isLiked !== undefined ? isLiked : post.isLiked,
+            };
           }
           return post;
         }),
       );
     } catch (error) {
-      toast.error(error.response?.data?.message || "Plz try again after some time too many attempts");
+      toast.error(
+        error.response?.data?.message || "Failed to update like status",
+      );
+      try {
+        const feedRes = await getFeedPostsAPI();
+        setPosts(feedRes.data.data);
+      } catch {
+        // ignore
+      }
     }
   };
 
@@ -330,10 +367,22 @@ const Dashboard = () => {
                 <div className="border-y border-gray-100 py-3 flex justify-between text-gray-500 font-medium">
                   <button
                     onClick={() => handleLike(post._id)}
-                    className={`flex items-center gap-2 hover:text-blue-600 transition ${post.likes?.includes(user?._id) ? "text-blue-600" : ""}`}
+                    className={`flex items-center gap-2 hover:text-blue-600 transition ${
+                      Array.isArray(post.likes) && post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString())).includes(user?._id?.toString())
+                        ? "text-blue-600 font-bold"
+                        : ""
+                    }`}
                   >
-                    {post.likes?.includes(user?._id) ? "👍" : "👍🏻"} Like (
-                    {post.likes?.length || 0})
+                    {Array.isArray(post.likes) && post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString())).includes(user?._id?.toString())
+                      ? "👍"
+                      : "👍🏻"}{" "}
+                    Like (
+                    {post.likesCount !== undefined
+                      ? post.likesCount
+                      : Array.isArray(post.likes)
+                      ? post.likes.length
+                      : 0}
+                    )
                   </button>
                   <button
                     onClick={() => {

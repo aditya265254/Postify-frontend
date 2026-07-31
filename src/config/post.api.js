@@ -44,3 +44,5 @@ export const adminHardDeleteAPI = (postId) =>
 export const getAdminDashboardAPI = () => {
     return api.get('/auth/admin/dashbord-data'); 
 };
+
+export const logoutAPI = () => api.post("/auth/logout");

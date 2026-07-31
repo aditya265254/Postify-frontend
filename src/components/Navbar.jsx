@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { logoutAPI } from "../config/post.api.js";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,7 +8,12 @@ const Navbar = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutAPI();
+    } catch {
+      // ignore
+    }
     localStorage.clear();
     navigate("/");
   };
