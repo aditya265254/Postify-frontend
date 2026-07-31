@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../config/api.js'; 
@@ -10,6 +10,17 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlError = urlParams.get('error')
+
+    if (urlError) {
+      setError({ message: urlError, statusCode: 429 })
+      toast.error(urlError)
+      window.history.replaceState({}, '', '/login')
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +39,6 @@ const Login = () => {
 
       toast.success('Login successful!');
 
-      // Redirect admin to admin panel, normal user to home feed
       if (user.role === 'admin') {
         navigate('/admin/dashboard');
       } else {

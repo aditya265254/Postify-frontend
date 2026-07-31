@@ -35,7 +35,7 @@ const MyPosts = () => {
     };
 
     const handleDelete = async (postId) => {
-        if (!window.confirm("Sach me delete karna hai?")) return;
+        if (!window.confirm("Are you sure want to delet your post ?")) return;
         try {
             await deletePostAPI(postId);
             toast.success("Post deleted!");
