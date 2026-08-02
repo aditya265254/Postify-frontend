@@ -33,7 +33,7 @@ const Dashboard = () => {
     try {
       await logoutAPI();
     } catch {
-      // ignore
+
     }
     localStorage.clear();
     navigate("/");
@@ -92,7 +92,7 @@ const Dashboard = () => {
             );
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [navigate, user]);
 
@@ -110,7 +110,7 @@ const Dashboard = () => {
 
     const currentUserId = user?._id?.toString();
 
-    // 1. Optimistic UI update (immediate response on click)
+
     setPosts((prevPosts) =>
       prevPosts.map((post) => {
         if (post._id === postId) {
@@ -158,7 +158,7 @@ const Dashboard = () => {
         const feedRes = await getFeedPostsAPI();
         setPosts(feedRes.data.data);
       } catch {
-        // ignore
+
       }
     }
   };
@@ -367,11 +367,10 @@ const Dashboard = () => {
                 <div className="border-y border-gray-100 py-3 flex justify-between text-gray-500 font-medium">
                   <button
                     onClick={() => handleLike(post._id)}
-                    className={`flex items-center gap-2 hover:text-blue-600 transition ${
-                      Array.isArray(post.likes) && post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString())).includes(user?._id?.toString())
+                    className={`flex items-center gap-2 hover:text-blue-600 transition ${Array.isArray(post.likes) && post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString())).includes(user?._id?.toString())
                         ? "text-blue-600 font-bold"
                         : ""
-                    }`}
+                      }`}
                   >
                     {Array.isArray(post.likes) && post.likes.map((id) => (typeof id === "object" ? (id._id || id).toString() : id.toString())).includes(user?._id?.toString())
                       ? "👍"
@@ -380,8 +379,8 @@ const Dashboard = () => {
                     {post.likesCount !== undefined
                       ? post.likesCount
                       : Array.isArray(post.likes)
-                      ? post.likes.length
-                      : 0}
+                        ? post.likes.length
+                        : 0}
                     )
                   </button>
                   <button
