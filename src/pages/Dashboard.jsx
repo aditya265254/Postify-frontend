@@ -451,25 +451,32 @@ const Dashboard = () => {
                       {post.comments
                         ?.slice()
                         .reverse()
-                        .map((comment, index) => (
-                          <div key={index} className="flex gap-2 items-start">
-                            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-bold text-gray-700 shrink-0 uppercase">
-                              {comment.user?.fullName?.[0] ||
-                                comment.user?.email?.[0] ||
-                                "U"}
+                        .map((comment, index) => {
+                          if (!comment) return null;
+                          const authorName =
+                            comment.user?.fullName ||
+                            comment.user?.email ||
+                            "User";
+                          const avatarChar =
+                            comment.user?.fullName?.[0] ||
+                            comment.user?.email?.[0] ||
+                            "U";
+                          return (
+                            <div key={index} className="flex gap-2 items-start">
+                              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-bold text-gray-700 shrink-0 uppercase">
+                                {avatarChar}
+                              </div>
+                              <div className="bg-white p-2 px-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm">
+                                <span className="font-semibold block text-xs text-gray-900">
+                                  {authorName}
+                                </span>
+                                <span className="text-gray-700">
+                                  {comment.text}
+                                </span>
+                              </div>
                             </div>
-                            <div className="bg-white p-2 px-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm">
-                              <span className="font-semibold block text-xs text-gray-900">
-                                {comment.user?.fullName ||
-                                  comment.user?.email ||
-                                  "User"}
-                              </span>
-                              <span className="text-gray-700">
-                                {comment.text}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                     </div>
                   </div>
                 )}
