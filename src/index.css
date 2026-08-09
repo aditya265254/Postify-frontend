@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+button,
+a,
+input[type="submit"],
+input[type="button"],
+[role="button"],
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed !important;
+}
+
+/* Custom Ambient Side Blending & Glow Effects */
+.bg-ambient-left {
+  background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.18) 0%, rgba(168, 85, 247, 0.12) 40%, transparent 70%);
+}
+
+.dark .bg-ambient-left {
+  background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.18) 40%, transparent 70%);
+}
+
+.bg-ambient-right {
+  background: radial-gradient(circle at 90% 40%, rgba(14, 165, 233, 0.18) 0%, rgba(59, 130, 246, 0.12) 40%, transparent 70%);
+}
+
+.dark .bg-ambient-right {
+  background: radial-gradient(circle at 90% 40%, rgba(14, 165, 233, 0.25) 0%, rgba(59, 130, 246, 0.18) 40%, transparent 70%);
+}
+
+/* Glassmorphism subtle backdrop */
+.glass-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Navbar from "../components/Navbar.jsx";
 import {
   getAdminUserPostsAPI,
   softDeletePostAPI,
@@ -9,20 +10,18 @@ import {
 } from "../config/post.api.js";
 
 const AdminUserPosts = () => {
-  const { userId } = useParams(); // Get user ID from the URL
+  const { userId } = useParams();
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // State for the Soft Delete Reason Modal
   const [reasonModal, setReasonModal] = useState({
     isOpen: false,
     postId: null,
     reason: "",
   });
 
-  // 🚀 Clean & Direct: fetchPosts is now safely defined inside useEffect
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || user?.role !== "admin") {
@@ -36,7 +35,7 @@ const AdminUserPosts = () => {
         setPosts(response.data.data);
       } catch (error) {
         toast.error(
-          error.response?.data?.message || "Failed to load user's posts",
+          error.response?.data?.message || "Failed to load user's posts"
         );
       } finally {
         setLoading(false);
@@ -54,17 +53,16 @@ const AdminUserPosts = () => {
     try {
       const response = await softDeletePostAPI(
         reasonModal.postId,
-        reasonModal.reason,
+        reasonModal.reason
       );
       toast.success("Post soft deleted successfully");
 
-      // Update UI
       setPosts(
         posts.map((post) =>
-          post._id === reasonModal.postId ? response.data.data : post,
-        ),
+          post._id === reasonModal.postId ? response.data.data : post
+        )
       );
-      setReasonModal({ isOpen: false, postId: null, reason: "" }); // Close modal
+      setReasonModal({ isOpen: false, postId: null, reason: "" });
     } catch (error) {
       toast.error(error.response?.data?.message || "Soft delete failed");
     }
@@ -73,7 +71,7 @@ const AdminUserPosts = () => {
   const handleRestore = async (postId) => {
     if (
       !window.confirm(
-        "Are you sure you want to restore this post? It will be visible to the public again.",
+        "Are you sure you want to restore this post? It will be visible to the public again."
       )
     )
       return;
@@ -82,7 +80,7 @@ const AdminUserPosts = () => {
       const response = await restorePostAPI(postId);
       toast.success("Post restored successfully");
       setPosts(
-        posts.map((post) => (post._id === postId ? response.data.data : post)),
+        posts.map((post) => (post._id === postId ? response.data.data : post))
       );
     } catch (error) {
       toast.error(error.response?.data?.message || "Restore failed");
@@ -92,7 +90,7 @@ const AdminUserPosts = () => {
   const handleHardDelete = async (postId) => {
     if (
       !window.confirm(
-        "WARNING: This will permanently delete the post and its image. Continue?",
+        "WARNING: This will permanently delete the post and its image. Continue?"
       )
     )
       return;
@@ -108,178 +106,185 @@ const AdminUserPosts = () => {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center font-bold text-slate-700 dark:text-slate-300">
         Loading User Data...
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
-      {/* Top Navigation Bar */}
-      <nav className="bg-gray-900 text-white shadow-md px-8 py-4 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate("/admin/dashboard")}
-            className="text-gray-300 hover:text-white font-medium text-lg"
-          >
-            ← Back to Dashboard
-          </button>
-          <h1 className="text-xl font-bold border-l border-gray-700 pl-4">
-            Moderation Panel
-          </h1>
-        </div>
-      </nav>
-
-      <div className="max-w-3xl mx-auto mt-8 px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
-            User's Content History
-          </h2>
-          <span className="bg-blue-100 text-blue-800 px-4 py-1 rounded-full font-semibold text-sm">
-            Total Posts: {posts.length}
-          </span>
-        </div>
-
-        <div className="space-y-6">
-          {posts.length === 0 ? (
-            <div className="bg-white p-10 text-center rounded-2xl shadow-sm text-gray-500">
-              This user has not created any posts yet.
-            </div>
-          ) : (
-            posts.map((post) => (
-              <div
-                key={post._id}
-                className={`p-6 rounded-2xl shadow-sm border ${post.isSoftDeleted ? "bg-red-50 border-red-200" : "bg-white border-gray-100"}`}
-              >
-                {/* Status Badge */}
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-gray-500">
-                    {new Date(post.createdAt).toLocaleString()}
-                  </span>
-                  {post.isSoftDeleted ? (
-                    <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                      Soft Deleted
-                    </span>
-                  ) : (
-                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                      Active
-                    </span>
-                  )}
-                </div>
-
-                {/* Content */}
-                {post.content && (
-                  <p className="text-gray-800 mb-4 whitespace-pre-wrap">
-                    {post.content}
-                  </p>
-                )}
-                {post.imageUrl && (
-                  <img
-                    src={post.imageUrl}
-                    alt="Post"
-                    className="w-full max-h-100 object-cover rounded-xl mb-4 border border-gray-200"
-                  />
-                )}
-
-                {/* Moderation Details (Only shows if Soft Deleted) */}
-                {post.isSoftDeleted && (
-                  <div className="bg-white rounded-lg p-4 mb-4 border border-red-100">
-                    <p className="text-sm text-gray-700 mb-2">
-                      <strong className="text-red-600">Admin Reason:</strong>{" "}
-                      {post.deletedByReason}
-                    </p>
-                    {post.userClarification ? (
-                      <p className="text-sm text-gray-700">
-                        <strong className="text-blue-600">User Appeal:</strong>{" "}
-                        {post.userClarification}
-                      </p>
-                    ) : (
-                      <p className="text-sm text-gray-400 italic">
-                        User has not appealed yet.
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Admin Action Buttons */}
-                <div className="border-t pt-4 flex gap-3 justify-end">
-                  {post.isSoftDeleted ? (
-                    <button
-                      onClick={() => handleRestore(post._id)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition text-sm"
-                    >
-                      ✅ Restore Post
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        setReasonModal({
-                          isOpen: true,
-                          postId: post._id,
-                          reason: "",
-                        })
-                      }
-                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition text-sm"
-                    >
-                      ⚠️ Soft Delete
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleHardDelete(post._id)}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition text-sm"
-                  >
-                    🗑️ Hard Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-10 relative transition-colors duration-300">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute top-10 left-10 w-96 h-96 bg-purple-500/10 dark:bg-purple-900/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 dark:bg-blue-900/15 rounded-full blur-3xl" />
       </div>
 
-      {/* Soft Delete Reason Modal */}
-      {reasonModal.isOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Provide Reason
-            </h3>
-            <p className="text-sm text-gray-500 mb-4">
-              This reason will be visible to the user.
-            </p>
+      <div className="relative z-10">
+        <Navbar />
 
-            <form onSubmit={handleSoftDelete}>
-              <textarea
-                value={reasonModal.reason}
-                onChange={(e) =>
-                  setReasonModal({ ...reasonModal, reason: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 resize-none"
-                rows="3"
-                placeholder="E.g., Violates community guidelines regarding spam..."
-                required
-              />
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setReasonModal({ isOpen: false, postId: null, reason: "" })
-                  }
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition"
-                >
-                  Submit & Delete
-                </button>
+        <div className="max-w-3xl mx-auto mt-8 px-4">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/admin/dashboard")}
+                className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition cursor-pointer"
+              >
+                ← Admin Dashboard
+              </button>
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
+                User Moderation History
+              </h2>
+            </div>
+            <span className="bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 px-3.5 py-1 rounded-full font-bold text-xs border border-blue-200 dark:border-blue-900/40">
+              Total Posts: {posts.length}
+            </span>
+          </div>
+
+          <div className="space-y-6">
+            {posts.length === 0 ? (
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-10 text-center rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-medium">
+                This user has not created any posts yet.
               </div>
-            </form>
+            ) : (
+              posts.map((post) => (
+                <div
+                  key={post._id}
+                  className={`p-6 rounded-3xl shadow-xs border backdrop-blur-md transition ${
+                    post.isSoftDeleted
+                      ? "bg-red-50/60 dark:bg-red-950/20 border-red-200 dark:border-red-900/40"
+                      : "bg-white/85 dark:bg-slate-900/85 border-slate-200/80 dark:border-slate-800/80"
+                  }`}
+                >
+                  {/* Status Badge */}
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs text-slate-400 dark:text-slate-500">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </span>
+                    {post.isSoftDeleted ? (
+                      <span className="bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide">
+                        Soft Deleted
+                      </span>
+                    ) : (
+                      <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide">
+                        Active
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  {post.content && (
+                    <p className="text-slate-800 dark:text-slate-200 mb-4 whitespace-pre-wrap text-[15px] leading-relaxed">
+                      {post.content}
+                    </p>
+                  )}
+                  {post.imageUrl && (
+                    <img
+                      src={post.imageUrl}
+                      alt="Post"
+                      className="w-full max-h-100 object-cover rounded-2xl mb-4 border border-slate-100 dark:border-slate-800"
+                    />
+                  )}
+
+                  {/* Moderation Details */}
+                  {post.isSoftDeleted && (
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 mb-4 border border-red-200 dark:border-red-900/50 shadow-xs">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 mb-2">
+                        <strong className="text-red-600 dark:text-red-400">Admin Reason:</strong>{" "}
+                        {post.deletedByReason}
+                      </p>
+                      {post.userClarification ? (
+                        <p className="text-xs text-slate-700 dark:text-slate-300">
+                          <strong className="text-blue-600 dark:text-blue-400">User Appeal:</strong>{" "}
+                          {post.userClarification}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-slate-400 italic">
+                          User has not appealed yet.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Admin Action Buttons */}
+                  <div className="border-t border-slate-100 dark:border-slate-800/80 pt-4 flex gap-3 justify-end">
+                    {post.isSoftDeleted ? (
+                      <button
+                        onClick={() => handleRestore(post._id)}
+                        className="bg-emerald-600 dark:bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-emerald-700 transition text-xs cursor-pointer shadow-xs"
+                      >
+                        ✅ Restore Post
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          setReasonModal({
+                            isOpen: true,
+                            postId: post._id,
+                            reason: "",
+                          })
+                        }
+                        className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-bold transition text-xs cursor-pointer shadow-xs"
+                      >
+                        ⚠️ Soft Delete
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleHardDelete(post._id)}
+                      className="bg-red-600 dark:bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold transition text-xs cursor-pointer shadow-xs"
+                    >
+                      🗑️ Hard Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-      )}
+
+        {/* Soft Delete Reason Modal */}
+        {reasonModal.isOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl w-full max-w-md shadow-2xl">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">
+                Provide Soft Delete Reason
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                This reason will be visible to the post owner.
+              </p>
+
+              <form onSubmit={handleSoftDelete}>
+                <textarea
+                  value={reasonModal.reason}
+                  onChange={(e) =>
+                    setReasonModal({ ...reasonModal, reason: e.target.value })
+                  }
+                  className="w-full bg-slate-50 dark:bg-slate-800/70 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 mb-4 resize-none"
+                  rows="3"
+                  placeholder="E.g., Violates community guidelines regarding spam..."
+                  required
+                />
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setReasonModal({ isOpen: false, postId: null, reason: "" })
+                    }
+                    className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-sm font-medium transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-xl text-sm font-bold transition cursor-pointer shadow-xs"
+                  >
+                    Submit & Delete
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

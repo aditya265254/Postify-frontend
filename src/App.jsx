@@ -2,13 +2,14 @@ import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { AppRouter } from './routes/AppRoutes';
+import { ThemeProvider } from './context/ThemeContext';
 
 const App = () => {
   return (
-    <>
-      <ToastContainer position="top-right" autoClose={2000} />
+    <ThemeProvider>
+      <ToastContainer position="top-right" autoClose={1200} />
       <RouterProvider router={AppRouter}/>
-    </>
+    </ThemeProvider>
   )
 }
 
