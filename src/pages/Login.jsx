@@ -4,13 +4,11 @@ import { toast } from 'react-toastify';
 import { Globe } from 'lucide-react';
 import api from '../config/api.js'; 
 import Navbar from '../components/Navbar.jsx';
+import AuthForm from '../components/forms/AuthForm.jsx';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState({ message: '', statusCode: null });
+  const [apiError, setApiError] = useState({ message: '', statusCode: null });
   const [loading, setLoading] = useState(false);
-  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,21 +16,23 @@ const Login = () => {
     const urlError = urlParams.get('error');
 
     if (urlError) {
-      setError({ message: urlError, statusCode: 429 });
+      setApiError({ message: urlError, statusCode: 429 });
       toast.error(urlError);
       window.history.replaceState({}, '', '/login');
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleLoginSubmit = async (data) => {
     if (loading) return;
 
     setLoading(true);
-    setError({ message: '', statusCode: null }); 
+    setApiError({ message: '', statusCode: null }); 
 
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/auth/login', {
+        email: data.email.trim(),
+        password: data.password,
+      });
       const { token, user } = response.data.data;
 
       localStorage.setItem('token', token);
@@ -50,11 +50,7 @@ const Login = () => {
       const errorMessage = err.response?.data?.message || 'Something went wrong';
       const statusCode = err.response?.data?.statusCode || err.response?.status;
 
-      setError({
-        message: errorMessage,
-        statusCode: statusCode,
-      });
-
+      setApiError({ message: errorMessage, statusCode });
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -93,48 +89,18 @@ const Login = () => {
             <div className="flex-1 h-px bg-slate-200 dark:bg-[#1C2A4A]" />
           </div>
 
-          {error.message && (
+          {apiError.message && (
             <p className="text-red-500 text-xs mb-3 text-center font-semibold bg-red-50 dark:bg-red-950/40 p-2.5 rounded-xl border border-red-200 dark:border-red-900/40">
-              {error.statusCode && `${error.statusCode} — `}{error.message}
+              {apiError.statusCode && `${apiError.statusCode} — `}{apiError.message}
             </p>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-slate-50 dark:bg-[#141D33] border border-slate-300 dark:border-[#1C2A4A] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-slate-50 dark:bg-[#141D33] border border-slate-300 dark:border-[#1C2A4A] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-              required
-            />
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-bold text-sm disabled:opacity-50 transition cursor-pointer shadow-md shadow-blue-500/20 mt-2"
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Logging in...</span>
-                </>
-              ) : (
-                'Login'
-              )}
-            </button>
-          </form>
+          {/* Reusable MVC AuthForm (Login mode) */}
+          <AuthForm
+            mode="login"
+            onSubmit={handleLoginSubmit}
+            loading={loading}
+          />
 
           <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-6">
             Don't have an account?
@@ -152,5 +118,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
