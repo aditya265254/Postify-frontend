@@ -5,6 +5,9 @@ import { ShieldCheck, AlertTriangle, CheckCircle2, Trash2, FileText } from 'luci
 import api from '../config/api.js';
 import { getAdminDashboardAPI } from "../config/post.api.js";
 import Navbar from '../components/Navbar.jsx';
+import UserAvatar from '../components/common/UserAvatar.jsx';
+import RoleBadge from '../components/common/RoleBadge.jsx';
+import LoadingScreen from '../components/common/LoadingScreen.jsx';
 
 const AdminDashboard = () => {
     const [data, setData] = useState({ users: [], pendingAppeals: [], totalUsers: 0, totalPosts: 0 });
@@ -56,11 +59,7 @@ const AdminDashboard = () => {
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-slate-50 dark:bg-[#060913] flex items-center justify-center font-bold text-slate-700 dark:text-slate-300">
-                Loading Admin Panel...
-            </div>
-        );
+        return <LoadingScreen message="Loading Admin Panel..." />;
     }
 
     return (
@@ -161,9 +160,7 @@ const AdminDashboard = () => {
                                 >
                                     {/* User Info Left Column */}
                                     <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-extrabold uppercase shrink-0">
-                                            {u.fullName?.[0] || "U"}
-                                        </div>
+                                        <UserAvatar name={u.fullName} size="md" />
                                         <div className="min-w-0 flex-1">
                                             <p className="font-bold text-slate-900 dark:text-white text-sm truncate">{u.fullName}</p>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{u.email}</p>
@@ -176,13 +173,7 @@ const AdminDashboard = () => {
                                             <FileText className="w-3.5 h-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
                                             <span>{u.postsCount !== undefined ? u.postsCount : 0} {u.postsCount === 1 ? "Post" : "Posts"}</span>
                                         </span>
-                                        <span className={`w-20 justify-center text-xs px-3 py-1 rounded-full font-bold inline-flex items-center shrink-0 uppercase tracking-wider ${
-                                            u.role === 'admin' 
-                                                ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50' 
-                                                : 'bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#1C2A4A]'
-                                        }`}>
-                                            {u.role}
-                                        </span>
+                                        <RoleBadge role={u.role} />
                                         <span className="w-5 text-right text-slate-400 dark:text-slate-500 font-bold shrink-0 text-sm">›</span>
                                     </div>
                                 </li>

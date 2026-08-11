@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import PostifyHeroSection from "../components/PostifyHeroSection.jsx";
+import UserAvatar from "../components/common/UserAvatar.jsx";
+import EmptyState from "../components/common/EmptyState.jsx";
 import {
   getFeedPostsAPI,
   likePostAPI,
@@ -252,9 +254,7 @@ const Dashboard = () => {
             {user ? (
               <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs hover:shadow-sm transition">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xs uppercase mb-3 border border-blue-500/30">
-                    {user.fullName?.[0] || "U"}
-                  </div>
+                  <UserAvatar name={user.fullName} size="xl" className="mb-3" />
                   <h3 className="font-bold text-slate-900 dark:text-white text-lg">
                     {user.fullName}
                   </h3>
@@ -326,9 +326,7 @@ const Dashboard = () => {
             {user && (
               <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-4 rounded-3xl shadow-xs flex items-center gap-3 cursor-pointer hover:border-slate-300 dark:hover:border-[#26375A] transition"
                 onClick={() => navigate("/create")}>
-                <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-sm uppercase shrink-0">
-                  {user.fullName?.[0] || "U"}
-                </div>
+                <UserAvatar name={user.fullName} size="md" />
                 <div className="flex-1 bg-slate-100 dark:bg-[#141D33] rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400">
                   What's on your mind, {user.fullName?.split(" ")[0]}?
                 </div>

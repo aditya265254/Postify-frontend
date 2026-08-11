@@ -1,11 +1,14 @@
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FolderOpen } from "lucide-react";
+import EmptyState from "./common/EmptyState.jsx";
 
 const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) => {
     if (!posts || posts.length === 0) {
         return (
-            <div className="text-center bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-10 rounded-2xl shadow-xs">
-                <p className="text-slate-500 dark:text-slate-400 font-medium">No posts found!</p>
-            </div>
+            <EmptyState
+                icon={FolderOpen}
+                title="No posts found!"
+                description="Create your first post to see it listed here."
+            />
         );
     }
 
