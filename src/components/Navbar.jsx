@@ -25,11 +25,11 @@ const Navbar = () => {
   const isHomePage = location.pathname === "/" || location.pathname === "/dashboard";
 
   return (
-    <nav className="bg-white/95 dark:bg-[#22222A]/98 border-b border-slate-200/80 dark:border-[#3E3E48] backdrop-blur-md px-4 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 shadow-xs">
+    <nav className="bg-white/95 dark:bg-[#090D1A]/95 border-b border-slate-200/80 dark:border-[#1C2A4A] backdrop-blur-md px-4 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 shadow-xs">
       <div className="flex items-center gap-6">
         <h1
           onClick={() => navigate("/")}
-          className="text-2xl font-black text-slate-900 dark:text-zinc-100 tracking-tight cursor-pointer"
+          className="text-2xl font-black text-blue-600 dark:text-blue-500 tracking-tight cursor-pointer"
         >
           Postify
         </h1>
@@ -37,9 +37,9 @@ const Navbar = () => {
         {!isHomePage && (
           <button
             onClick={() => navigate("/")}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition cursor-pointer text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-zinc-100 bg-slate-100 dark:bg-[#303038] hover:bg-slate-200 dark:hover:bg-[#34343A]"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition cursor-pointer text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white bg-slate-100 dark:bg-[#141D33] hover:bg-slate-200 dark:hover:bg-[#1C2A4A]"
           >
-            <Home className="w-4 h-4 text-slate-500 dark:text-zinc-400" />
+            <Home className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             Home
           </button>
         )}
@@ -49,7 +49,7 @@ const Navbar = () => {
         <button
           onClick={toggleTheme}
           title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          className="p-2 rounded-xl bg-slate-100 dark:bg-[#303038] text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-[#34343A] transition cursor-pointer flex items-center justify-center w-10 h-10 border border-slate-200/80 dark:border-[#3E3E48]"
+          className="p-2 rounded-xl bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1C2A4A] transition cursor-pointer flex items-center justify-center w-10 h-10 border border-slate-200/80 dark:border-[#1C2A4A]"
         >
           {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
         </button>
@@ -58,13 +58,13 @@ const Navbar = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate("/login")}
-              className="text-slate-700 dark:text-zinc-300 font-semibold hover:text-slate-900 dark:hover:text-zinc-100 px-3 py-2 text-sm transition cursor-pointer"
+              className="text-slate-700 dark:text-slate-300 font-semibold hover:text-slate-900 dark:hover:text-white px-3 py-2 text-sm transition cursor-pointer"
             >
               Login
             </button>
             <button
               onClick={() => navigate("/signup")}
-              className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 dark:hover:bg-zinc-200 transition shadow-xs cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-xs cursor-pointer"
             >
               Sign Up
             </button>
@@ -77,25 +77,25 @@ const Navbar = () => {
           >
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="font-semibold text-slate-700 dark:text-zinc-200 hover:text-slate-900 dark:hover:text-zinc-100 bg-slate-100 dark:bg-[#303038] border border-slate-200/80 dark:border-[#3E3E48] px-3.5 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer text-sm"
+              className="font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141D33] border border-slate-200/80 dark:border-[#1C2A4A] px-3.5 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer text-sm"
             >
-              <User className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> {user?.fullName || "User"} <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              <User className="w-4 h-4 text-slate-500 dark:text-slate-400" /> {user?.fullName || "User"} <ChevronDown className="w-3.5 h-3.5 opacity-70" />
             </button>
 
             {isMenuOpen && (
               <div className="absolute right-0 pt-2 w-52 z-50">
-                <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] rounded-xl shadow-xl py-1.5 backdrop-blur-md">
+                <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] rounded-xl shadow-xl py-1.5 backdrop-blur-md">
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate("/create");
                     }}
-                    className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-[#303038] font-medium text-sm transition cursor-pointer rounded-xl"
+                    className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141D33] font-medium text-sm transition cursor-pointer rounded-xl"
                   >
-                    <Plus className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> Create Post
+                    <Plus className="w-4 h-4 text-slate-500 dark:text-slate-400" /> Create Post
                   </button>
 
-                  <hr className="my-1 border-slate-100 dark:border-[#3E3E48]" />
+                  <hr className="my-1 border-slate-100 dark:border-[#1C2A4A]" />
 
                   {!isHomePage && (
                     <>
@@ -104,11 +104,11 @@ const Navbar = () => {
                           setIsMenuOpen(false);
                           navigate("/");
                         }}
-                        className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-[#303038] font-medium text-sm transition cursor-pointer rounded-xl"
+                        className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141D33] font-medium text-sm transition cursor-pointer rounded-xl"
                       >
-                        <Home className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> Home
+                        <Home className="w-4 h-4 text-slate-500 dark:text-slate-400" /> Home
                       </button>
-                  <hr className="my-1 border-slate-100 dark:border-[#3E3E48]" />
+                      <hr className="my-1 border-slate-100 dark:border-[#1C2A4A]" />
                     </>
                   )}
 
@@ -119,11 +119,11 @@ const Navbar = () => {
                           setIsMenuOpen(false);
                           navigate("/admin/dashboard");
                         }}
-                        className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-[#303038] font-medium text-sm transition cursor-pointer rounded-xl"
+                        className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141D33] font-medium text-sm transition cursor-pointer rounded-xl"
                       >
-                        <ShieldCheck className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> Admin Dashboard
+                        <ShieldCheck className="w-4 h-4 text-slate-500 dark:text-slate-400" /> Admin Dashboard
                       </button>
-                  <hr className="my-1 border-slate-100 dark:border-[#3E3E48]" />
+                      <hr className="my-1 border-slate-100 dark:border-[#1C2A4A]" />
                     </>
                   )}
 
@@ -132,12 +132,12 @@ const Navbar = () => {
                       setIsMenuOpen(false);
                       navigate("/my-posts");
                     }}
-                    className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-[#303038] font-medium text-sm transition cursor-pointer rounded-xl"
+                    className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141D33] font-medium text-sm transition cursor-pointer rounded-xl"
                   >
-                    <Image className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> My Posts
+                    <Image className="w-4 h-4 text-slate-500 dark:text-slate-400" /> My Posts
                   </button>
 
-                  <hr className="my-1 border-slate-100 dark:border-[#3E3E48]/60" />
+                  <hr className="my-1 border-slate-100 dark:border-[#1C2A4A]/60" />
 
                   <button
                     onClick={handleLogout}

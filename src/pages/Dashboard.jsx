@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { 
-  Sparkles, 
-  ThumbsUp, 
-  MessageSquare, 
-  Share2, 
-  FolderOpen, 
-  ShieldAlert, 
-  Image, 
-  ShieldCheck, 
-  Home, 
+import {
+  Sparkles,
+  ThumbsUp,
+  MessageSquare,
+  Share2,
+  FolderOpen,
+  ShieldAlert,
+  Image,
+  ShieldCheck,
+  Home,
   Send,
   Plus
 } from "lucide-react";
@@ -95,7 +95,7 @@ const Dashboard = () => {
             );
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [navigate, user]);
 
@@ -121,8 +121,8 @@ const Dashboard = () => {
         if (post._id === postId) {
           const likesArr = Array.isArray(post.likes)
             ? post.likes.map((id) =>
-                typeof id === "object" ? (id._id || id).toString() : id.toString()
-              )
+              typeof id === "object" ? (id._id || id).toString() : id.toString()
+            )
             : [];
           const alreadyLiked = likesArr.includes(currentUserId);
           const updatedLikes = alreadyLiked
@@ -162,7 +162,7 @@ const Dashboard = () => {
       try {
         const feedRes = await getFeedPostsAPI();
         setPosts(feedRes.data.data);
-      } catch {}
+      } catch { }
     }
   };
 
@@ -236,45 +236,54 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#1E1E24] text-slate-900 dark:text-zinc-100 relative transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100 relative transition-colors duration-300 overflow-x-hidden">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* Left Sidebar Widget */}
           <div className="hidden lg:block lg:col-span-3 space-y-6">
             {/* Profile Card */}
             {user ? (
-              <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-5 rounded-3xl shadow-xs hover:shadow-sm transition">
+              <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs hover:shadow-sm transition">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-slate-800 dark:bg-[#303038] text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xs uppercase mb-3 border border-slate-700 dark:border-[#3E3E48]">
+                  <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-xs uppercase mb-3 border border-blue-500/30">
                     {user.fullName?.[0] || "U"}
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-lg">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-lg">
                     {user.fullName}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-zinc-400">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                     {user.email}
                   </p>
+
+                  {user.role === "admin" && (
+                    <div className="w-full bg-slate-100 dark:bg-[#141D33] p-2.5 rounded-2xl text-center border border-slate-200/60 dark:border-[#1C2A4A]">
+                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-1">
+                        Admin <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+                      </p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">Account Type</p>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-sm border border-slate-800">
+              <div className="bg-slate-900 dark:bg-[#0D1424] text-white p-6 rounded-3xl shadow-sm border border-slate-800 dark:border-[#1C2A4A]">
                 <h3 className="text-xl font-black mb-2">Welcome to Postify</h3>
-                <p className="text-sm text-slate-300 mb-6 leading-relaxed">
+                <p className="text-sm text-slate-300 dark:text-slate-400 mb-6 leading-relaxed">
                   Share your thoughts, connect with creators, and explore exciting posts.
                 </p>
                 <div className="space-y-3">
                   <button
                     onClick={() => navigate("/signup")}
-                    className="w-full bg-white text-slate-900 font-bold py-2.5 px-4 rounded-xl text-sm hover:bg-slate-100 transition cursor-pointer"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition cursor-pointer shadow-xs"
                   >
                     Get Started (Sign Up)
                   </button>
                   <button
                     onClick={() => navigate("/login")}
-                    className="w-full border border-slate-700 text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-slate-800 transition cursor-pointer"
+                    className="w-full border border-slate-700 dark:border-[#1C2A4A] text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-slate-800 dark:hover:bg-[#141D33] transition cursor-pointer"
                   >
                     Login to Account
                   </button>
@@ -283,49 +292,43 @@ const Dashboard = () => {
             )}
 
             {/* Navigation Quick Links */}
-            <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-5 rounded-3xl shadow-xs space-y-3">
-              <h4 className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider px-2">
-                Navigation
-              </h4>
-              <button
-                onClick={() => navigate("/")}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-900 dark:bg-[#303038] dark:text-zinc-100 transition"
-              >
-                <Home className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> Home
-              </button>
-              {user && (
+            {user && (
+              <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs space-y-3">
+                <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">
+                  Navigation
+                </h4>
                 <button
                   onClick={() => navigate("/my-posts")}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#38383F]/60 transition"
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141D33] transition"
                 >
-                  <Image className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> My Posts
+                  <Image className="w-4 h-4 text-slate-500 dark:text-slate-400" /> My Posts
                 </button>
-              )}
-              {user?.role === "admin" && (
-                <button
-                  onClick={() => navigate("/admin/dashboard")}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#38383F]/60 transition"
-                >
-                  <ShieldCheck className="w-4 h-4 text-slate-500 dark:text-zinc-400" /> Admin Dashboard
-                </button>
-              )}
-            </div>
+                {user?.role === "admin" && (
+                  <button
+                    onClick={() => navigate("/admin/dashboard")}
+                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-[#141D33] transition"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" /> Admin Dashboard
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Main Middle Feed Column */}
           <div className="lg:col-span-6 space-y-6">
-            
+
             {/* Quick Create Box Launcher */}
             {user && (
-              <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-4 rounded-3xl shadow-xs flex items-center gap-3 cursor-pointer hover:border-slate-300 dark:hover:border-zinc-700 transition"
-                   onClick={() => navigate("/create")}>
-                <div className="w-10 h-10 bg-slate-800 dark:bg-[#303038] text-white rounded-xl flex items-center justify-center font-bold text-sm uppercase shrink-0">
+              <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-4 rounded-3xl shadow-xs flex items-center gap-3 cursor-pointer hover:border-slate-300 dark:hover:border-[#26375A] transition"
+                onClick={() => navigate("/create")}>
+                <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-sm uppercase shrink-0">
                   {user.fullName?.[0] || "U"}
                 </div>
-                <div className="flex-1 bg-slate-100 dark:bg-[#303038]/70 rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-zinc-400">
+                <div className="flex-1 bg-slate-100 dark:bg-[#141D33] rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400">
                   What's on your mind, {user.fullName?.split(" ")[0]}?
                 </div>
-                <button className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-800 dark:hover:bg-zinc-200 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs">
                   <Plus className="w-3.5 h-3.5" /> Post
                 </button>
               </div>
@@ -333,8 +336,8 @@ const Dashboard = () => {
 
             {/* Feed Header */}
             <div className="flex justify-between items-center px-1">
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-slate-700 dark:text-zinc-300" /> Community Feed
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-500" /> Community Feed
               </h2>
             </div>
 
@@ -345,36 +348,36 @@ const Dashboard = () => {
                   {[1, 2, 3].map((n) => (
                     <div
                       key={n}
-                      className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-6 rounded-3xl animate-shimmer"
+                      className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-6 rounded-3xl animate-shimmer"
                     >
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-11 h-11 bg-slate-200 dark:bg-[#303038] rounded-2xl animate-pulse shrink-0" />
+                        <div className="w-11 h-11 bg-slate-200 dark:bg-[#141D33] rounded-2xl animate-pulse shrink-0" />
                         <div className="space-y-2 flex-1">
-                          <div className="h-4 w-36 bg-slate-200 dark:bg-[#303038] rounded-md animate-pulse" />
-                          <div className="h-3 w-24 bg-slate-200 dark:bg-[#303038] rounded-md animate-pulse" />
+                          <div className="h-4 w-36 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
+                          <div className="h-3 w-24 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
                         </div>
                       </div>
                       <div className="space-y-2 mb-4">
-                        <div className="h-4 w-full bg-slate-200 dark:bg-[#303038] rounded-md animate-pulse" />
-                        <div className="h-4 w-4/5 bg-slate-200 dark:bg-[#303038] rounded-md animate-pulse" />
+                        <div className="h-4 w-full bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
+                        <div className="h-4 w-4/5 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
                       </div>
-                      <div className="h-52 w-full bg-slate-200 dark:bg-[#303038] rounded-2xl animate-pulse" />
+                      <div className="h-52 w-full bg-slate-200 dark:bg-[#141D33] rounded-2xl animate-pulse" />
                     </div>
                   ))}
                 </div>
               ) : posts.length === 0 ? (
-                <div className="text-center bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-12 rounded-3xl shadow-xs">
-                  <FolderOpen className="w-12 h-12 text-slate-400 dark:text-zinc-500 stroke-1 mx-auto mb-3" />
-                  <p className="text-slate-600 dark:text-zinc-300 font-semibold text-lg">
+                <div className="text-center bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-12 rounded-3xl shadow-xs">
+                  <FolderOpen className="w-12 h-12 text-slate-400 dark:text-slate-500 stroke-1 mx-auto mb-3" />
+                  <p className="text-slate-600 dark:text-slate-300 font-semibold text-lg">
                     No posts available right now!
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                     Be the first one to create a post and inspire the community.
                   </p>
                   {user && (
                     <button
                       onClick={() => navigate("/create")}
-                      className="mt-5 bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-800 dark:hover:bg-zinc-200 px-6 py-2.5 rounded-full text-sm font-semibold transition inline-flex items-center gap-1.5"
+                      className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition inline-flex items-center gap-1.5 shadow-xs"
                     >
                       <Plus className="w-4 h-4" /> Create First Post
                     </button>
@@ -393,18 +396,18 @@ const Dashboard = () => {
                   return (
                     <div
                       key={post._id}
-                      className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-6 rounded-3xl shadow-xs hover:shadow-sm transition duration-200"
+                      className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-6 rounded-3xl shadow-xs hover:shadow-sm transition duration-200"
                     >
                       {/* Author Header */}
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-11 h-11 bg-slate-800 dark:bg-[#303038] rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-xs uppercase shrink-0">
+                        <div className="w-11 h-11 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-black text-lg shadow-xs uppercase shrink-0">
                           {post.user?.fullName?.[0] || "U"}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-base leading-snug truncate">
+                          <h3 className="font-bold text-slate-900 dark:text-white text-base leading-snug truncate">
                             {post.user?.fullName || "Anonymous Creator"}
                           </h3>
-                          <p className="text-xs text-slate-400 dark:text-zinc-500">
+                          <p className="text-xs text-slate-400 dark:text-slate-500">
                             {new Date(post.createdAt).toLocaleString(undefined, {
                               dateStyle: "medium",
                               timeStyle: "short",
@@ -415,14 +418,14 @@ const Dashboard = () => {
 
                       {/* Post Content Text */}
                       {post.content && (
-                        <p className="text-slate-800 dark:text-zinc-200 mb-4 whitespace-pre-wrap text-[15px] leading-relaxed">
+                        <p className="text-slate-800 dark:text-slate-200 mb-4 whitespace-pre-wrap text-[15px] leading-relaxed">
                           {post.content}
                         </p>
                       )}
 
                       {/* Post Image Attachment */}
                       {post.imageUrl && (
-                        <div className="rounded-2xl overflow-hidden border border-slate-100 dark:border-[#3E3E48] mb-4 bg-slate-100 dark:bg-[#1E1E24]">
+                        <div className="rounded-2xl overflow-hidden border border-slate-100 dark:border-[#1C2A4A] mb-4 bg-slate-100 dark:bg-[#141D33]">
                           <img
                             src={post.imageUrl}
                             alt="Post Attachment"
@@ -432,31 +435,28 @@ const Dashboard = () => {
                       )}
 
                       {/* Interaction Bar */}
-                      <div className="border-t border-b border-slate-100 dark:border-[#3E3E48]/80 py-3 flex justify-around text-slate-500 dark:text-zinc-400 font-medium text-sm">
+                      <div className="border-t border-b border-slate-100 dark:border-[#1C2A4A]/80 py-3 flex justify-around text-slate-500 dark:text-slate-400 font-medium text-sm">
                         <button
                           onClick={() => handleLike(post._id)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl cursor-pointer transition-colors duration-150 hover:bg-slate-100 dark:hover:bg-[#38383F]/60 active:scale-95 ${
-                            isLikedByCurrentUser
-                              ? "text-slate-900 dark:text-zinc-100 font-bold"
-                              : "text-slate-500 dark:text-zinc-400"
-                          }`}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl cursor-pointer transition-colors duration-150 hover:bg-slate-100 dark:hover:bg-[#141D33] active:scale-95 ${isLikedByCurrentUser
+                              ? "text-blue-600 dark:text-blue-400 font-bold"
+                              : "text-slate-500 dark:text-slate-400"
+                            }`}
                         >
                           <ThumbsUp
-                            className={`w-4 h-4 transition-colors duration-150 ${
-                              isLikedByCurrentUser
-                                ? "fill-slate-900 dark:fill-zinc-100 text-slate-900 dark:text-zinc-100"
+                            className={`w-4 h-4 transition-colors duration-150 ${isLikedByCurrentUser
+                                ? "fill-blue-600 dark:fill-blue-400 text-blue-600 dark:text-blue-400"
                                 : "fill-none"
-                            } ${
-                              likePopId === post._id ? "animate-like-pop" : ""
-                            }`}
+                              } ${likePopId === post._id ? "animate-like-pop" : ""
+                              }`}
                           />
                           <span>Like</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold transition-colors duration-150 ${isLikedByCurrentUser ? "bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900" : "bg-slate-100 dark:bg-[#303038]"}`}>
+                          <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold transition-colors duration-150 ${isLikedByCurrentUser ? "bg-blue-50 text-blue-600 dark:bg-[#172545] dark:text-blue-400" : "bg-slate-100 dark:bg-[#141D33]"}`}>
                             {post.likesCount !== undefined
                               ? post.likesCount
                               : Array.isArray(post.likes)
-                              ? post.likes.length
-                              : 0}
+                                ? post.likes.length
+                                : 0}
                           </span>
                         </button>
 
@@ -468,22 +468,22 @@ const Dashboard = () => {
                                 [post._id]: !showCommentBox[post._id],
                               });
                           }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#38383F]/60 transition cursor-pointer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#141D33] transition cursor-pointer"
                         >
                           <MessageSquare className="w-4 h-4" />
                           <span>Comment</span>
-                          <span className="text-xs px-1.5 py-0.5 rounded-xl bg-slate-100 dark:bg-[#303038] font-bold">
+                          <span className="text-xs px-1.5 py-0.5 rounded-xl bg-slate-100 dark:bg-[#141D33] font-bold">
                             {post.comments?.length || 0}
                           </span>
                         </button>
 
                         <button
                           onClick={() => handleShare(post._id, post.content)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#38383F]/60 transition cursor-pointer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#141D33] transition cursor-pointer"
                         >
                           <Share2 className="w-4 h-4" />
                           <span>Share</span>
-                          <span className="text-xs px-1.5 py-0.5 rounded-xl bg-slate-100 dark:bg-[#303038] font-bold">
+                          <span className="text-xs px-1.5 py-0.5 rounded-xl bg-slate-100 dark:bg-[#141D33] font-bold">
                             {post.sharesCount || 0}
                           </span>
                         </button>
@@ -509,7 +509,7 @@ const Dashboard = () => {
 
                       {/* Comment Section Box */}
                       {showCommentBox[post._id] && (
-                        <div className="mt-4 bg-slate-50 dark:bg-[#1E1E24]/60 p-4 rounded-2xl border border-slate-100 dark:border-[#3E3E48]">
+                        <div className="mt-4 bg-slate-50 dark:bg-[#141D33]/60 p-4 rounded-2xl border border-slate-100 dark:border-[#1C2A4A]">
                           <div className="flex gap-2 mb-4">
                             <input
                               type="text"
@@ -521,14 +521,14 @@ const Dashboard = () => {
                                   [post._id]: e.target.value,
                                 })
                               }
-                              className="flex-1 bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] rounded-xl px-4 py-2 text-sm text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-slate-400 dark:focus:border-zinc-500"
+                              className="flex-1 bg-white dark:bg-[#0D1424] border border-slate-200 dark:border-[#1C2A4A] rounded-xl px-4 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
                               onKeyDown={(e) =>
                                 e.key === "Enter" && handleComment(post._id)
                               }
                             />
                             <button
                               onClick={() => handleComment(post._id)}
-                              className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-800 dark:hover:bg-zinc-200 px-5 py-2 rounded-xl text-xs font-bold cursor-pointer transition shadow-xs flex items-center gap-1"
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer transition shadow-xs flex items-center gap-1"
                             >
                               <Send className="w-3.5 h-3.5" /> Post
                             </button>
@@ -551,14 +551,14 @@ const Dashboard = () => {
                                     "U";
                                   return (
                                     <div key={index} className="flex gap-2.5 items-start">
-                                      <div className="w-7 h-7 bg-slate-300 dark:bg-zinc-700 rounded-xl flex items-center justify-center text-xs font-bold text-slate-700 dark:text-zinc-200 shrink-0 uppercase">
+                                      <div className="w-7 h-7 bg-blue-600 rounded-xl flex items-center justify-center text-xs font-bold text-white shrink-0 uppercase">
                                         {avatarChar}
                                       </div>
-                                      <div className="bg-white dark:bg-[#28282F] p-2.5 px-3.5 rounded-2xl rounded-tl-none shadow-xs border border-slate-100 dark:border-[#3E3E48] text-sm flex-1">
-                                        <span className="font-bold block text-xs text-slate-900 dark:text-zinc-100">
+                                      <div className="bg-white dark:bg-[#0D1424] p-2.5 px-3.5 rounded-2xl rounded-tl-none shadow-xs border border-slate-100 dark:border-[#1C2A4A] text-sm flex-1">
+                                        <span className="font-bold block text-xs text-slate-900 dark:text-white">
                                           {authorName}
                                         </span>
-                                        <span className="text-slate-700 dark:text-zinc-300 text-xs">
+                                        <span className="text-slate-700 dark:text-slate-300 text-xs">
                                           {comment.text}
                                         </span>
                                       </div>
@@ -583,26 +583,26 @@ const Dashboard = () => {
           {/* Right Sidebar Widget */}
           <div className="hidden lg:block lg:col-span-3 space-y-6">
             {/* Community Trending */}
-            <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-5 rounded-3xl shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-base flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-slate-700 dark:text-zinc-300" /> Trending Topics
+            <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs space-y-4">
+              <h3 className="font-extrabold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" /> Trending Topics
               </h3>
               <div className="space-y-3 text-xs">
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#303038]/50 border border-slate-100 dark:border-[#3E3E48]">
-                  <p className="font-bold text-slate-900 dark:text-zinc-100">#PostifyV2</p>
-                  <p className="text-slate-500 dark:text-zinc-400 text-[11px] mt-0.5">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#141D33] border border-slate-100 dark:border-[#1C2A4A]">
+                  <p className="font-bold text-blue-600 dark:text-blue-400">#PostifyV2</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                     New dark mode & aesthetics
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#303038]/50 border border-slate-100 dark:border-[#3E3E48]">
-                  <p className="font-bold text-slate-900 dark:text-zinc-100">#CommunityFeed</p>
-                  <p className="text-slate-500 dark:text-zinc-400 text-[11px] mt-0.5">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#141D33] border border-slate-100 dark:border-[#1C2A4A]">
+                  <p className="font-bold text-blue-600 dark:text-blue-400">#CommunityFeed</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                     Active conversations today
                   </p>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#303038]/50 border border-slate-100 dark:border-[#3E3E48]">
-                  <p className="font-bold text-slate-900 dark:text-zinc-100">#CreativePosts</p>
-                  <p className="text-slate-500 dark:text-zinc-400 text-[11px] mt-0.5">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#141D33] border border-slate-100 dark:border-[#1C2A4A]">
+                  <p className="font-bold text-blue-600 dark:text-blue-400">#CreativePosts</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
                     Share images & ideas
                   </p>
                 </div>
@@ -610,14 +610,14 @@ const Dashboard = () => {
             </div>
 
             {/* Guidelines / Footer Info */}
-            <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-5 rounded-3xl shadow-xs">
-              <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs uppercase tracking-wider mb-2">
+            <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs">
+              <h4 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider mb-2">
                 Platform Guidelines
               </h4>
-              <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed mb-3">
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3">
                 Keep discussions respectful and enjoyable for everyone.
               </p>
-              <div className="text-[11px] text-slate-400 dark:text-zinc-500 flex flex-wrap gap-2 pt-2 border-t border-slate-100 dark:border-[#3E3E48]">
+              <div className="text-[11px] text-slate-400 dark:text-slate-500 flex flex-wrap gap-2 pt-2 border-t border-slate-100 dark:border-[#1C2A4A]">
                 <span>© 2026 Postify</span>
                 <span>•</span>
                 <span>Privacy</span>
@@ -633,11 +633,11 @@ const Dashboard = () => {
       {/* Admin Soft Delete Reason Modal */}
       {reasonModal.isOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
-          <div className="bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] p-6 rounded-3xl w-full max-w-md shadow-2xl">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100 mb-2">
+          <div className="bg-white dark:bg-[#0D1424] border border-slate-200 dark:border-[#1C2A4A] p-6 rounded-3xl w-full max-w-md shadow-2xl">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
               Provide Soft Delete Reason
             </h3>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               This reason will be visible to the post owner.
             </p>
 
@@ -647,7 +647,7 @@ const Dashboard = () => {
                 onChange={(e) =>
                   setReasonModal({ ...reasonModal, reason: e.target.value })
                 }
-                className="w-full bg-slate-50 dark:bg-[#303038]/70 border border-slate-300 dark:border-[#3E3E48] rounded-xl p-3 text-slate-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 mb-4 resize-none"
+                className="w-full bg-slate-50 dark:bg-[#141D33] border border-slate-300 dark:border-[#1C2A4A] rounded-xl p-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500 mb-4 resize-none"
                 rows="3"
                 placeholder="E.g., Violates community guidelines..."
                 required
@@ -658,7 +658,7 @@ const Dashboard = () => {
                   onClick={() =>
                     setReasonModal({ isOpen: false, postId: null, reason: "" })
                   }
-                  className="px-4 py-2 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#38383F] rounded-xl text-sm font-medium transition cursor-pointer"
+                  className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141D33] rounded-xl text-sm font-medium transition cursor-pointer"
                 >
                   Cancel
                 </button>

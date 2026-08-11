@@ -49,18 +49,18 @@ const VerifyEmail = () => {
     }, [searchParams, navigate]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#1E1E24] text-slate-900 dark:text-zinc-100">
-            <div className="bg-white dark:bg-[#28282F] p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-[#3E3E48] text-center max-w-md w-full">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100">
+            <div className="bg-white dark:bg-[#0D1424] p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-[#1C2A4A] text-center max-w-md w-full">
                 <h2 className="text-2xl font-bold mb-4">Email Verification</h2>
                 
-                {status && <p className="text-violet-600 dark:text-violet-400 font-medium">{status}</p>}
+                {status && <p className="text-blue-600 dark:text-blue-400 font-medium">{status}</p>}
                 
                 {error && (
                     <div>
                         <p className="text-red-500 font-medium mb-4">{error}</p>
                         <button 
                             onClick={() => navigate("/")} 
-                            className="bg-violet-600 dark:bg-violet-500 text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition-colors cursor-pointer"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
                         >
                             Go to Login
                         </button>

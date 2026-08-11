@@ -107,13 +107,13 @@ const AdminUserPosts = () => {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#1E1E24] flex items-center justify-center font-bold text-slate-700 dark:text-zinc-300">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#060913] flex items-center justify-center font-bold text-slate-700 dark:text-slate-300">
         Loading User Data...
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#1E1E24] text-slate-900 dark:text-zinc-100 pb-10 relative transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100 pb-10 relative transition-colors duration-300">
       <Navbar />
 
       <div className="max-w-3xl mx-auto mt-8 px-4">
@@ -121,22 +121,22 @@ const AdminUserPosts = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate("/admin/dashboard")}
-              className="bg-slate-200 dark:bg-[#303038] text-slate-700 dark:text-zinc-200 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-300 dark:hover:bg-[#303038] transition cursor-pointer flex items-center gap-1.5"
+              className="bg-slate-200 dark:bg-[#141D33] text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-300 dark:hover:bg-[#1C2A4A] transition cursor-pointer flex items-center gap-1.5"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Admin Dashboard
             </button>
-            <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100">
+            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">
               User Moderation History
             </h2>
           </div>
-          <span className="bg-slate-100 dark:bg-[#303038] text-slate-700 dark:text-zinc-300 px-3.5 py-1 rounded-full font-bold text-xs border border-slate-200 dark:border-[#3E3E48]">
+          <span className="bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 px-3.5 py-1 rounded-full font-bold text-xs border border-slate-200 dark:border-[#1C2A4A]">
             Total Posts: {posts.length}
           </span>
         </div>
 
         <div className="space-y-6">
           {posts.length === 0 ? (
-            <div className="bg-white dark:bg-[#28282F] p-10 text-center rounded-3xl border border-slate-200 dark:border-[#3E3E48] text-slate-500 dark:text-zinc-400 font-medium shadow-xs">
+            <div className="bg-white dark:bg-[#0D1424] p-10 text-center rounded-3xl border border-slate-200 dark:border-[#1C2A4A] text-slate-500 dark:text-slate-400 font-medium shadow-xs">
               This user has not created any posts yet.
             </div>
           ) : (
@@ -146,12 +146,12 @@ const AdminUserPosts = () => {
                 className={`p-6 rounded-3xl shadow-xs border transition ${
                   post.isSoftDeleted
                     ? "bg-red-50/60 dark:bg-red-950/20 border-red-200 dark:border-red-900/40"
-                    : "bg-white dark:bg-[#28282F] border-slate-200/80 dark:border-[#3E3E48]"
+                    : "bg-white dark:bg-[#0D1424] border-slate-200/80 dark:border-[#1C2A4A]"
                 }`}
               >
                 {/* Status Badge */}
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs text-slate-400 dark:text-zinc-500">
+                  <span className="text-xs text-slate-400 dark:text-slate-500">
                     {new Date(post.createdAt).toLocaleString()}
                   </span>
                   {post.isSoftDeleted ? (
@@ -167,7 +167,7 @@ const AdminUserPosts = () => {
 
                 {/* Content */}
                 {post.content && (
-                  <p className="text-slate-800 dark:text-zinc-200 mb-4 whitespace-pre-wrap text-[15px] leading-relaxed">
+                  <p className="text-slate-800 dark:text-slate-200 mb-4 whitespace-pre-wrap text-[15px] leading-relaxed">
                     {post.content}
                   </p>
                 )}
@@ -175,20 +175,20 @@ const AdminUserPosts = () => {
                   <img
                     src={post.imageUrl}
                     alt="Post"
-                    className="w-full max-h-100 object-cover rounded-2xl mb-4 border border-slate-100 dark:border-[#3E3E48]"
+                    className="w-full max-h-100 object-cover rounded-2xl mb-4 border border-slate-100 dark:border-[#1C2A4A]"
                   />
                 )}
 
                 {/* Moderation Details */}
                 {post.isSoftDeleted && (
-                  <div className="bg-white dark:bg-[#28282F] rounded-2xl p-4 mb-4 border border-red-200 dark:border-red-900/50 shadow-xs">
-                    <p className="text-xs text-slate-700 dark:text-zinc-300 mb-2">
+                  <div className="bg-white dark:bg-[#0D1424] rounded-2xl p-4 mb-4 border border-red-200 dark:border-red-900/50 shadow-xs">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 mb-2">
                       <strong className="text-red-600 dark:text-red-400">Admin Reason:</strong>{" "}
                       {post.deletedByReason}
                     </p>
                     {post.userClarification ? (
-                      <p className="text-xs text-slate-700 dark:text-zinc-300">
-                        <strong className="text-slate-900 dark:text-zinc-100">User Appeal:</strong>{" "}
+                      <p className="text-xs text-slate-700 dark:text-slate-300">
+                        <strong className="text-slate-900 dark:text-white">User Appeal:</strong>{" "}
                         {post.userClarification}
                       </p>
                     ) : (
@@ -200,7 +200,7 @@ const AdminUserPosts = () => {
                 )}
 
                 {/* Admin Action Buttons */}
-                <div className="border-t border-slate-100 dark:border-[#3E3E48]/80 pt-4 flex gap-3 justify-end">
+                <div className="border-t border-slate-100 dark:border-[#1C2A4A]/80 pt-4 flex gap-3 justify-end">
                   {post.isSoftDeleted ? (
                     <button
                       onClick={() => handleRestore(post._id)}
@@ -237,11 +237,11 @@ const AdminUserPosts = () => {
         {/* Soft Delete Reason Modal */}
         {reasonModal.isOpen && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
-            <div className="bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] p-6 rounded-3xl w-full max-w-md shadow-2xl">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100 mb-2">
+            <div className="bg-white dark:bg-[#0D1424] border border-slate-200 dark:border-[#1C2A4A] p-6 rounded-3xl w-full max-w-md shadow-2xl">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
                 Provide Soft Delete Reason
               </h3>
-              <p className="text-xs text-slate-500 dark:text-zinc-400 mb-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
                 This reason will be visible to the post owner.
               </p>
 
@@ -251,7 +251,7 @@ const AdminUserPosts = () => {
                   onChange={(e) =>
                     setReasonModal({ ...reasonModal, reason: e.target.value })
                   }
-                  className="w-full bg-slate-50 dark:bg-[#303038]/70 border border-slate-300 dark:border-[#3E3E48] rounded-xl p-3 text-slate-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 mb-4 resize-none"
+                  className="w-full bg-slate-50 dark:bg-[#141D33] border border-slate-300 dark:border-[#1C2A4A] rounded-xl p-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 mb-4 resize-none"
                   rows="3"
                   placeholder="E.g., Violates community guidelines regarding spam..."
                   required
@@ -262,7 +262,7 @@ const AdminUserPosts = () => {
                     onClick={() =>
                       setReasonModal({ isOpen: false, postId: null, reason: "" })
                     }
-                    className="px-4 py-2 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#38383F] rounded-xl text-sm font-medium transition cursor-pointer"
+                    className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141D33] rounded-xl text-sm font-medium transition cursor-pointer"
                   >
                     Cancel
                   </button>

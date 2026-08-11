@@ -145,27 +145,27 @@ const CreatePost = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#1E1E24] text-slate-900 dark:text-zinc-100 pb-10 relative transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100 pb-10 relative transition-colors duration-300">
             <Navbar />
             <div className="max-w-2xl mx-auto mt-8 px-4">
 
                 {/* Create Post Form Card */}
-                <div className="bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-6 rounded-3xl shadow-xs mb-8">
-                    <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
-                        <Plus className="w-5 h-5 text-slate-700 dark:text-zinc-300" /> Create New Post
+                <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-6 rounded-3xl shadow-xs mb-8">
+                    <h2 className="text-xl font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" /> Create New Post
                     </h2>
                     <form onSubmit={handleCreate}>
                         <textarea
                             placeholder="What's on your mind today?"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
-                            className="w-full bg-slate-50 dark:bg-[#303038]/70 border border-slate-200 dark:border-[#3E3E48] rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-zinc-100 focus:outline-none focus:border-slate-400 dark:focus:border-zinc-500 resize-none mb-4"
+                            className="w-full bg-slate-50 dark:bg-[#141D33] border border-slate-200 dark:border-[#1C2A4A] rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 resize-none mb-4"
                             rows={4}
                         />
 
                         {/* Image Preview */}
                         {preview && !showCropper && (
-                            <div className="relative mb-4 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#3E3E48] bg-slate-100 dark:bg-[#303038]">
+                            <div className="relative mb-4 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1C2A4A] bg-slate-100 dark:bg-[#141D33]">
                                 <img
                                     src={preview}
                                     alt="Preview"
@@ -207,7 +207,7 @@ const CreatePost = () => {
                             />
                             <label
                                 htmlFor="post-image-input"
-                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-[#303038] text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-[#303038] border border-slate-200 dark:border-[#3E3E48] transition cursor-pointer"
+                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1C2A4A] border border-slate-200 dark:border-[#1C2A4A] transition cursor-pointer"
                             >
                                 <ImagePlus className="w-4 h-4" />
                                 {image ? "Change Image" : "Add Image"}
@@ -216,7 +216,7 @@ const CreatePost = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-800 dark:hover:bg-zinc-200 px-6 py-2.5 rounded-xl text-sm font-bold transition disabled:opacity-50 cursor-pointer shadow-xs"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition disabled:opacity-50 cursor-pointer shadow-md shadow-blue-500/20"
                             >
                                 {loading ? "Publishing..." : "Publish Post"}
                             </button>
@@ -225,8 +225,8 @@ const CreatePost = () => {
                 </div>
 
                 {/* Recent Posts */}
-                <h2 className="text-lg font-extrabold text-slate-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-slate-700 dark:text-zinc-300" /> Your Recent Posts Preview
+                <h2 className="text-lg font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-500" /> Your Recent Posts Preview
                 </h2>
                 <MyPostList posts={posts} showActions={false} />
             </div>
@@ -234,19 +234,19 @@ const CreatePost = () => {
             {/* ─── Crop Modal ─── */}
             {showCropper && rawImageSrc && (
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
-                    <div className="bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-[#0D1424] border border-slate-200 dark:border-[#1C2A4A] rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col">
                         
                         {/* Header */}
-                        <div className="flex justify-between items-center px-5 py-4 border-b border-slate-100 dark:border-[#3E3E48]">
+                        <div className="flex justify-between items-center px-5 py-4 border-b border-slate-100 dark:border-[#1C2A4A]">
                             <div>
-                                <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+                                <h3 className="font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                                     <Crop className="w-4 h-4" /> Crop Image
                                 </h3>
-                                <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Drag to reposition · Scroll to zoom</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Drag to reposition · Scroll to zoom</p>
                             </div>
                             <button
                                 onClick={handleCropCancel}
-                                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-[#38383F] text-slate-500 dark:text-zinc-400 transition cursor-pointer"
+                                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-[#141D33] text-slate-500 dark:text-slate-400 transition cursor-pointer"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -270,10 +270,10 @@ const CreatePost = () => {
                         </div>
 
                         {/* Controls */}
-                        <div className="px-5 py-4 space-y-4 border-t border-slate-100 dark:border-[#3E3E48]">
+                        <div className="px-5 py-4 space-y-4 border-t border-slate-100 dark:border-[#1C2A4A]">
                             {/* Aspect Ratio */}
                             <div>
-                                <p className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Aspect Ratio</p>
+                                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Aspect Ratio</p>
                                 <div className="flex gap-2 flex-wrap">
                                     {ASPECT_RATIOS.map((r) => (
                                         <button
@@ -282,8 +282,8 @@ const CreatePost = () => {
                                             onClick={() => setAspectRatio(r.value)}
                                             className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition cursor-pointer ${
                                                 aspectRatio === r.value
-                                                    ? "bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-slate-900 dark:border-zinc-100"
-                                                    : "bg-slate-100 dark:bg-[#303038] text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-[#3E3E48] hover:bg-slate-200 dark:hover:bg-[#303038]"
+                                                    ? "bg-blue-600 text-white border-blue-600"
+                                                    : "bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#1C2A4A] hover:bg-slate-200 dark:hover:bg-[#1C2A4A]"
                                             }`}
                                         >
                                             {r.label}
@@ -294,7 +294,7 @@ const CreatePost = () => {
 
                             {/* Zoom Slider */}
                             <div>
-                                <p className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Zoom: {zoom.toFixed(1)}x</p>
+                                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Zoom: {zoom.toFixed(1)}x</p>
                                 <input
                                     type="range"
                                     min={1}
@@ -302,7 +302,7 @@ const CreatePost = () => {
                                     step={0.05}
                                     value={zoom}
                                     onChange={(e) => setZoom(Number(e.target.value))}
-                                    className="w-full accent-slate-900 dark:accent-zinc-100 cursor-pointer"
+                                    className="w-full accent-blue-600 cursor-pointer"
                                 />
                             </div>
 
@@ -311,14 +311,14 @@ const CreatePost = () => {
                                 <button
                                     type="button"
                                     onClick={handleCropCancel}
-                                    className="px-5 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#38383F] transition cursor-pointer"
+                                    className="px-5 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141D33] transition cursor-pointer"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleCropDone}
-                                    className="flex items-center gap-2 bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-800 dark:hover:bg-zinc-200 px-6 py-2 rounded-xl text-sm font-bold transition cursor-pointer shadow-xs"
+                                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition cursor-pointer shadow-xs"
                                 >
                                     <Check className="w-4 h-4" /> Apply Crop
                                 </button>
