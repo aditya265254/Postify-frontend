@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ShieldCheck, Globe, AlertTriangle, CheckCircle2, Trash2, FileText } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, CheckCircle2, Trash2, FileText } from 'lucide-react';
 import api from '../config/api.js';
 import { getAdminDashboardAPI } from "../config/post.api.js";
 import Navbar from '../components/Navbar.jsx';
@@ -71,20 +71,17 @@ const AdminDashboard = () => {
                 
                 {/* Stats Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-[#1C2A4A] pb-4">
-                    <div>
-                        <h2 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                            <ShieldCheck className="w-6 h-6 text-purple-600 dark:text-purple-400" /> Admin Dashboard
-                        </h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Overview of community platform stats and moderation requests
-                        </p>
+                    <div className="flex items-center gap-3">
+                        <ShieldCheck className="w-6 h-6 text-purple-600 dark:text-purple-400 shrink-0" />
+                        <div>
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                                Admin Dashboard
+                            </h2>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                Overview of community platform stats and moderation requests
+                            </p>
+                        </div>
                     </div>
-                    <button
-                        onClick={() => navigate('/')}
-                        className="bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#1C2A4A] hover:bg-slate-200 dark:hover:bg-[#1C2A4A] px-4 py-2 rounded-full text-xs font-bold transition cursor-pointer flex items-center gap-1.5"
-                    >
-                        <Globe className="w-4 h-4" /> View Public Feed
-                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
