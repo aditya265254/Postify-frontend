@@ -54,7 +54,7 @@ const CreatePost = () => {
                 <PostForm onSubmit={handleCreatePost} loading={loading} />
 
                 {/* Recent Posts */}
-                <h2 className="text-lg font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" /> Your Recent Posts Preview
                 </h2>
 

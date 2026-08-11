@@ -83,3 +83,7 @@ input:disabled {
 .animate-shimmer {
   animation: shimmer 1.6s infinite ease-in-out;
 }
+
+.dark-mode .logo-image {
+    filter: invert(1);
+}

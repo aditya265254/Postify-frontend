@@ -45,7 +45,7 @@ export const PostForm = ({ onSubmit, loading = false }) => {
 
   return (
     <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-6 rounded-3xl shadow-xs mb-8">
-      <h2 className="text-xl font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
         <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" /> Create New Post
       </h2>
 

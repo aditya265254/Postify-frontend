@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IoTrendingUpSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -268,9 +269,9 @@ const Dashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-900 dark:bg-[#0D1424] text-white p-6 rounded-3xl shadow-sm border border-slate-800 dark:border-[#1C2A4A]">
-                <h3 className="text-xl font-black mb-2">Welcome to Postify</h3>
-                <p className="text-sm text-slate-300 dark:text-slate-400 mb-6 leading-relaxed">
+              <div className="bg-white dark:bg-[#0D1424] text-slate-900 dark:text-white p-6 rounded-3xl shadow-xs border border-slate-200/80 dark:border-[#1C2A4A]">
+                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">Welcome to Postify</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
                   Share your thoughts, connect with creators, and explore exciting posts.
                 </p>
                 <div className="space-y-3">
@@ -282,7 +283,7 @@ const Dashboard = () => {
                   </button>
                   <button
                     onClick={() => navigate("/login")}
-                    className="w-full border border-slate-700 dark:border-[#1C2A4A] text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-slate-800 dark:hover:bg-[#141D33] transition cursor-pointer"
+                    className="w-full border border-slate-300 dark:border-[#1C2A4A] text-slate-700 dark:text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-slate-100 dark:hover:bg-[#141D33] transition cursor-pointer"
                   >
                     Login to Account
                   </button>
@@ -333,7 +334,7 @@ const Dashboard = () => {
 
             {/* Feed Header */}
             <div className="flex justify-between items-center px-1">
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-amber-500" /> Community Feed
               </h2>
             </div>
@@ -438,14 +439,14 @@ const Dashboard = () => {
                         <button
                           onClick={() => handleLike(post._id)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl cursor-pointer transition-colors duration-150 hover:bg-slate-100 dark:hover:bg-[#141D33] active:scale-95 ${isLikedByCurrentUser
-                              ? "text-blue-600 dark:text-blue-400 font-bold"
-                              : "text-slate-500 dark:text-slate-400"
+                            ? "text-blue-600 dark:text-blue-400 font-bold"
+                            : "text-slate-500 dark:text-slate-400"
                             }`}
                         >
                           <ThumbsUp
                             className={`w-4 h-4 transition-colors duration-150 ${isLikedByCurrentUser
-                                ? "fill-blue-600 dark:fill-blue-400 text-blue-600 dark:text-blue-400"
-                                : "fill-none"
+                              ? "fill-blue-600 dark:fill-blue-400 text-blue-600 dark:text-blue-400"
+                              : "fill-none"
                               } ${likePopId === post._id ? "animate-like-pop" : ""
                               }`}
                           />
@@ -583,8 +584,8 @@ const Dashboard = () => {
           <div className="hidden lg:block lg:col-span-3 space-y-6">
             {/* Community Trending */}
             <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-5 rounded-3xl shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-900 dark:text-white text-base flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" /> Trending Topics
+              <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <IoTrendingUpSharp className="w-6 h-6 text-amber-500" /> Trending Topics
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#141D33] border border-slate-100 dark:border-[#1C2A4A]">
