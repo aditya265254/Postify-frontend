@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>authfrontend</title>
+    <title>Postify</title>
+    <script>
+      (function() {
+        try {
+          localStorage.removeItem('postify_theme');
+          const override = localStorage.getItem('postify_theme_override');
+          const isDark = override === 'dark' || (!override && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

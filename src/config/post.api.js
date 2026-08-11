@@ -28,8 +28,6 @@ export const appealPostAPI = (postId, userClarification) => {
   return api.patch(`/posts/appeal-post/${postId}`, { userClarification });
 };
 
-// --- ADMIN MODERATION APIs ---
-
 export const getAdminUserPostsAPI = (userId) =>
   api.get(`posts/admin/user-post/${userId}`);
 

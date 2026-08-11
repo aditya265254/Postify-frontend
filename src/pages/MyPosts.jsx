@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Image, Plus } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import MyPostList from "../components/MyPostList.jsx";
 import { getMyPostsAPI, deletePostAPI, updatePostAPI, appealPostAPI } from "../config/post.api.js";
 
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
     
     const [editingPost, setEditingPost] = useState(null); 
     const [editContent, setEditContent] = useState("");
@@ -24,11 +26,14 @@ const MyPosts = () => {
     }, [navigate]);
 
     const fetchMyPosts = async () => {
+        setLoading(true);
         try {
             const response = await getMyPostsAPI();
             setPosts(response.data.data);
         } catch {
             toast.error("Failed to load posts");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,28 +99,31 @@ const MyPosts = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-10 relative transition-colors duration-300">
-            {/* Ambient Background Glows */}
-            <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-                <div className="absolute top-10 left-1/4 w-80 h-80 bg-blue-500/10 dark:bg-indigo-600/15 rounded-full blur-3xl" />
-                <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-purple-500/10 dark:bg-purple-600/15 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative z-10">
-                <Navbar />
-                <div className="max-w-3xl mx-auto mt-8 px-4">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                            <span>🖼️</span> Manage My Posts
-                        </h2>
-                        <button 
-                            onClick={() => navigate('/create')} 
-                            className="bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-700 dark:hover:bg-blue-600 transition cursor-pointer shadow-xs"
-                        >
-                            + Create New
-                        </button>
+        <div className="min-h-screen bg-slate-50 dark:bg-[#1E1E24] text-slate-900 dark:text-zinc-100 pb-10 relative transition-colors duration-300">
+            <Navbar />
+            <div className="max-w-3xl mx-auto mt-8 px-4">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+                        <Image className="w-6 h-6 text-slate-700 dark:text-zinc-300" /> Manage My Posts
+                    </h2>
+                    <button 
+                        onClick={() => navigate('/create')} 
+                        className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-full text-xs font-bold hover:bg-slate-800 dark:hover:bg-zinc-200 transition cursor-pointer shadow-xs flex items-center gap-1"
+                    >
+                        <Plus className="w-3.5 h-3.5" /> Create New
+                    </button>
+                </div>
+                
+                {loading ? (
+                    <div className="space-y-4">
+                        {[1, 2].map((n) => (
+                            <div key={n} className="p-6 rounded-2xl bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] animate-shimmer">
+                                <div className="h-4 w-3/4 bg-slate-200 dark:bg-[#303038] rounded mb-3 animate-pulse" />
+                                <div className="h-44 w-full bg-slate-200 dark:bg-[#303038] rounded-xl animate-pulse" />
+                            </div>
+                        ))}
                     </div>
-                    
+                ) : (
                     <MyPostList 
                         posts={posts} 
                         showActions={true} 
@@ -123,93 +131,95 @@ const MyPosts = () => {
                         onEdit={handleEdit} 
                         onAppeal={handleAppealClick} 
                     />
-                </div>
-
-                {/* EDIT MODAL */}
-                {editingPost && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
-                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-2xl w-full max-w-lg">
-                            <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 mb-4">Edit Post</h2>
-                            
-                            <form onSubmit={handleUpdate}>
-                                <textarea
-                                    value={editContent}
-                                    onChange={(e) => setEditContent(e.target.value)}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 mb-4 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 resize-none"
-                                    rows="4"
-                                    placeholder="Edit your content here..."
-                                />
-                                
-                                <div className="mb-6">
-                                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">Update Image (Optional)</label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => setEditImage(e.target.files[0])}
-                                        className="text-xs text-slate-500 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 dark:file:bg-blue-950/60 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-100 file:cursor-pointer cursor-pointer"
-                                    />
-                                </div>
-
-                                <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => setEditingPost(null)}
-                                        className="px-5 py-2 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-sm transition cursor-pointer"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={updateLoading}
-                                        className="bg-blue-600 dark:bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition disabled:opacity-50 cursor-pointer shadow-xs"
-                                    >
-                                        {updateLoading ? "Updating..." : "Save Changes"}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
-
-                {/* APPEAL MODAL */}
-                {appealModal.isOpen && (
-                    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
-                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-2xl w-full max-w-lg">
-                            <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 mb-2">Submit an Appeal</h2>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Please explain why you think your post should be restored.</p>
-                            
-                            <form onSubmit={handleAppealSubmit}>
-                                <textarea
-                                    value={appealModal.clarification}
-                                    onChange={(e) => setAppealModal({ ...appealModal, clarification: e.target.value })}
-                                    className="w-full bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 mb-4 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 resize-none"
-                                    rows="4"
-                                    placeholder="Write your clarification to the admin..."
-                                />
-                                
-                                <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => setAppealModal({ isOpen: false, postId: null, clarification: "" })}
-                                        className="px-5 py-2 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-sm transition cursor-pointer"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={appealLoading}
-                                        className="bg-red-600 dark:bg-red-500 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-red-700 dark:hover:bg-red-600 transition disabled:opacity-50 cursor-pointer shadow-xs"
-                                    >
-                                        {appealLoading ? "Submitting..." : "Submit Appeal"}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 )}
             </div>
+
+            {/* EDIT MODAL */}
+            {editingPost && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
+                    <div className="bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] p-6 rounded-3xl shadow-2xl w-full max-w-lg">
+                        <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mb-4">Edit Post</h2>
+                        
+                        <form onSubmit={handleUpdate}>
+                            <textarea
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                                className="w-full bg-slate-50 dark:bg-[#303038]/70 border border-slate-200 dark:border-[#3E3E48] rounded-2xl px-4 py-3 mb-4 text-slate-900 dark:text-zinc-100 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-zinc-500 resize-none"
+                                rows="4"
+                                placeholder="Edit your content here..."
+                            />
+                            
+                            <div className="mb-6">
+                                <label className="block text-xs font-bold text-slate-600 dark:text-zinc-300 mb-2">Update Image (Optional)</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setEditImage(e.target.files[0])}
+                                    className="text-xs text-slate-500 dark:text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-slate-100 dark:file:bg-zinc-800 file:text-slate-700 dark:file:text-zinc-300 hover:file:bg-slate-200 file:cursor-pointer cursor-pointer"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-[#3E3E48] pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingPost(null)}
+                                    className="px-5 py-2 text-slate-600 dark:text-zinc-300 font-medium hover:bg-slate-100 dark:hover:bg-[#38383F] rounded-full text-sm transition cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={updateLoading}
+                                    className="bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-6 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 dark:hover:bg-zinc-200 transition disabled:opacity-50 cursor-pointer shadow-xs"
+                                >
+                                    {updateLoading ? "Updating..." : "Save Changes"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* APPEAL MODAL */}
+            {appealModal.isOpen && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 px-4">
+                    <div className="bg-white dark:bg-[#28282F] border border-slate-200 dark:border-[#3E3E48] p-6 rounded-3xl shadow-2xl w-full max-w-lg">
+                        <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mb-2">Submit an Appeal</h2>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mb-4">Please explain why you think your post should be restored.</p>
+                        
+                        <form onSubmit={handleAppealSubmit}>
+                            <textarea
+                                value={appealModal.clarification}
+                                onChange={(e) => setAppealModal({ ...appealModal, clarification: e.target.value })}
+                                className="w-full bg-slate-50 dark:bg-[#303038]/70 border border-slate-200 dark:border-[#3E3E48] rounded-2xl px-4 py-3 mb-4 text-slate-900 dark:text-zinc-100 text-sm focus:outline-none focus:border-slate-400 dark:focus:border-zinc-500 resize-none"
+                                rows="4"
+                                placeholder="Write your clarification to the admin..."
+                            />
+                            
+                            <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-[#3E3E48] pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setAppealModal({ isOpen: false, postId: null, clarification: "" })}
+                                    className="px-5 py-2 text-slate-600 dark:text-zinc-300 font-medium hover:bg-slate-100 dark:hover:bg-[#38383F] rounded-full text-sm transition cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={appealLoading}
+                                    className="bg-red-600 dark:bg-red-500 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-red-700 dark:hover:bg-red-600 transition disabled:opacity-50 cursor-pointer shadow-xs"
+                                >
+                                    {appealLoading ? "Submitting..." : "Submit Appeal"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 export default MyPosts;
+
+

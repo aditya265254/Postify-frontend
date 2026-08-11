@@ -1,8 +1,10 @@
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
+
 const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) => {
     if (!posts || posts.length === 0) {
         return (
-            <div className="text-center bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-10 rounded-2xl shadow-xs backdrop-blur-md">
-                <p className="text-slate-500 dark:text-slate-400 font-medium">No posts found!</p>
+            <div className="text-center bg-white dark:bg-[#28282F] border border-slate-200/80 dark:border-[#3E3E48] p-10 rounded-2xl shadow-xs">
+                <p className="text-slate-500 dark:text-zinc-400 font-medium">No posts found!</p>
             </div>
         );
     }
@@ -12,19 +14,18 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
             {posts.map((post) => (
                 <div 
                     key={post._id} 
-                    className={`p-6 rounded-2xl shadow-xs border backdrop-blur-md transition ${
+                    className={`p-6 rounded-2xl shadow-xs border transition ${
                         post.isSoftDeleted 
                             ? 'bg-red-50/60 dark:bg-red-950/30 border-red-200 dark:border-red-900/50' 
-                            : 'bg-white/85 dark:bg-slate-900/85 border-slate-200/80 dark:border-slate-800/80'
+                            : 'bg-white dark:bg-[#28282F] border-slate-200/80 dark:border-[#3E3E48]'
                     }`}
                 >
-                    
                     {/* Content & Image */}
                     {post.content && (
                         <p className={`mb-3 text-[15px] leading-relaxed ${
                             post.isSoftDeleted 
-                                ? 'text-slate-400 dark:text-slate-500 line-through' 
-                                : 'text-slate-800 dark:text-slate-200'
+                                ? 'text-slate-400 dark:text-zinc-500 line-through' 
+                                : 'text-slate-800 dark:text-zinc-200'
                         }`}>
                             {post.content}
                         </p>
@@ -34,7 +35,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
                         <img
                             src={post.imageUrl}
                             alt="Post"
-                            className={`w-full max-h-100 object-cover rounded-xl mb-3 border border-slate-100 dark:border-slate-800 ${
+                            className={`w-full max-h-100 object-cover rounded-xl mb-3 border border-slate-100 dark:border-[#3E3E48] ${
                                 post.isSoftDeleted ? 'opacity-50' : 'opacity-100'
                             }`}
                         />
@@ -42,17 +43,17 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
 
                     {/* Soft Delete Alert & Appeal Section */}
                     {post.isSoftDeleted && (
-                        <div className="bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/60 p-4 rounded-xl mt-4 mb-2 shadow-xs">
-                            <p className="text-sm text-red-600 dark:text-red-400 font-bold mb-1">
-                                ⚠️ This post was removed by an Admin
+                        <div className="bg-white dark:bg-[#28282F] border border-red-200 dark:border-red-900/60 p-4 rounded-xl mt-4 mb-2 shadow-xs">
+                            <p className="text-sm text-red-600 dark:text-red-400 font-bold mb-1 flex items-center gap-1.5">
+                                <AlertTriangle className="w-4 h-4" /> This post was removed by an Admin
                             </p>
-                            <p className="text-sm text-slate-700 dark:text-slate-300 mb-3">
+                            <p className="text-sm text-slate-700 dark:text-zinc-300 mb-3">
                                 <span className="font-semibold">Reason:</span> {post.deletedByReason}
                             </p>
                             
                             {post.userClarification ? (
-                                <p className="text-sm text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-950/50 p-2 rounded-lg inline-block border border-blue-100 dark:border-blue-900/40">
-                                    ✅ Appeal submitted. Awaiting admin review.
+                                <p className="text-sm text-slate-700 dark:text-zinc-300 font-semibold bg-slate-100 dark:bg-[#303038] p-2.5 rounded-lg inline-flex items-center gap-1.5 border border-slate-200 dark:border-[#3E3E48]">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Appeal submitted. Awaiting admin review.
                                 </p>
                             ) : (
                                 <button
@@ -66,7 +67,7 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
                     )}
 
                     {/* Footer Actions (Date, Edit, Delete) */}
-                    <div className="flex justify-between items-center text-xs text-slate-400 dark:text-slate-500 mt-4 border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                    <div className="flex justify-between items-center text-xs text-slate-400 dark:text-zinc-500 mt-4 border-t border-slate-100 dark:border-[#3E3E48]/80 pt-3">
                         <span>{new Date(post.createdAt).toLocaleString()}</span>
                         
                         {showActions && (
@@ -74,14 +75,14 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
                                 {!post.isSoftDeleted && (
                                     <button
                                         onClick={() => onEdit && onEdit(post._id)}
-                                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold cursor-pointer"
+                                        className="text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 font-bold cursor-pointer"
                                     >
                                         Edit
                                     </button>
                                 )}
                                 <button
                                     onClick={() => onDelete && onDelete(post._id)}
-                                    className="text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 font-bold transition cursor-pointer"
+                                    className="text-slate-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 font-bold transition cursor-pointer"
                                 >
                                     Delete Permanently
                                 </button>
@@ -95,3 +96,5 @@ const MyPostList = ({ posts, showActions = false, onDelete, onEdit, onAppeal }) 
 };
 
 export default MyPostList;
+
+
