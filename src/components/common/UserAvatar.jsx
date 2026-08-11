@@ -1,9 +1,6 @@
 import React from "react";
 
-/**
- * Reusable UserAvatar Component
- * Displays uppercase first letter avatar with configurable size and color
- */
+
 export const UserAvatar = ({
   name = "U",
   size = "md", // "sm" | "md" | "lg" | "xl"

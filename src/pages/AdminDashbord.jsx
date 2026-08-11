@@ -8,10 +8,13 @@ import Navbar from '../components/Navbar.jsx';
 import UserAvatar from '../components/common/UserAvatar.jsx';
 import RoleBadge from '../components/common/RoleBadge.jsx';
 import LoadingScreen from '../components/common/LoadingScreen.jsx';
+import ConfirmModal from '../components/modals/ConfirmModal.jsx';
 
 const AdminDashboard = () => {
     const [data, setData] = useState({ users: [], pendingAppeals: [], totalUsers: 0, totalPosts: 0 });
     const [loading, setLoading] = useState(true);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, postId: null });
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -47,14 +50,22 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleHardDelete = async (postId) => {
-        if (!window.confirm("Permanently delete this post?")) return;
+    const handleHardDelete = (postId) => {
+        setDeleteModal({ isOpen: true, postId });
+    };
+
+    const handleConfirmHardDelete = async () => {
+        if (!deleteModal.postId) return;
+        setDeleteLoading(true);
         try {
-            await api.delete(`/posts/admin-delete/${postId}`);
+            await api.delete(`/posts/admin-delete/${deleteModal.postId}`);
             toast.success("Post permanently deleted");
-            window.location.reload(); 
+            setDeleteModal({ isOpen: false, postId: null });
+            fetchDashboard();
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to delete post");
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -182,6 +193,18 @@ const AdminDashboard = () => {
                     )}
                 </div>
             </div>
+
+            {/* ADMIN HARD DELETE CONFIRMATION MODAL */}
+            <ConfirmModal
+                isOpen={deleteModal.isOpen}
+                onClose={() => setDeleteModal({ isOpen: false, postId: null })}
+                onConfirm={handleConfirmHardDelete}
+                loading={deleteLoading}
+                title="Permanently Delete Post?"
+                message="Are you sure you want to permanently delete this post from the database? This action cannot be reversed."
+                confirmText="Hard Delete"
+                confirmVariant="danger"
+            />
         </div>
     );
 };

@@ -15,7 +15,7 @@ export const PostifyHeroSection = () => {
   useEffect(() => {
     if (!isVisible) return;
 
-    // If timer is paused via click, stop countdown
+    // If timer is paused while holding press, stop countdown
     if (isPaused) return;
 
     if (timeLeft <= 0) {
@@ -39,19 +39,19 @@ export const PostifyHeroSection = () => {
     }, 350);
   };
 
-  const togglePause = () => {
-    setIsPaused((prev) => !prev);
-  };
-
   if (!isVisible) return null;
 
   const progressPercent = (timeLeft / DURATION_SECONDS) * 100;
 
   return (
     <div
-      onClick={togglePause}
-      title={isPaused ? "Click to resume timer" : "Click to pause timer"}
-      className={`mb-8 relative overflow-hidden bg-gradient-to-r from-slate-100/95 via-white to-slate-100/90 dark:from-[#0D1424] dark:via-[#111A2E] dark:to-[#0A0F1D] border border-slate-200/80 dark:border-[#1C2A4A] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm transition-all duration-300 cursor-pointer ${
+      onMouseDown={() => setIsPaused(true)}
+      onMouseUp={() => setIsPaused(false)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+      title="Hold click to pause timer"
+      className={`mb-8 relative overflow-hidden bg-gradient-to-r from-slate-100/95 via-white to-slate-100/90 dark:from-[#0D1424] dark:via-[#111A2E] dark:to-[#0A0F1D] border border-slate-200/80 dark:border-[#1C2A4A] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm transition-all duration-300 select-none cursor-pointer ${
         isFadingOut ? "opacity-0 scale-95 max-h-0 py-0 mb-0 border-none overflow-hidden" : "opacity-100 scale-100"
       }`}
     >
@@ -68,6 +68,7 @@ export const PostifyHeroSection = () => {
       {/* Close button top-right */}
       <button
         onClick={handleDismiss}
+        onMouseDown={(e) => e.stopPropagation()}
         title="Dismiss banner"
         className="absolute top-3.5 right-3.5 p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-[#1C2A4A] transition cursor-pointer z-20"
       >
