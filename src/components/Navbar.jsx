@@ -5,6 +5,7 @@ import { logoutAPI } from "../config/post.api.js";
 import { useTheme } from "../context/ThemeContext";
 
 import { PostifyLogo } from "./PostifyLogo.jsx";
+import RouteLoadingBar from "./common/RouteLoadingBar.jsx";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,7 +29,9 @@ const Navbar = () => {
   const isHomePage = location.pathname === "/" || location.pathname === "/dashboard";
 
   return (
-    <nav className="bg-white/95 dark:bg-[#090D1A]/95 border-b border-slate-200/80 dark:border-[#1C2A4A] backdrop-blur-md px-4 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 shadow-xs">
+    <>
+      <RouteLoadingBar />
+      <nav className="bg-white/95 dark:bg-[#090D1A]/95 border-b border-slate-200/80 dark:border-[#1C2A4A] backdrop-blur-md px-4 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 shadow-xs">
       <div className="flex items-center gap-6">
         <div onClick={() => navigate("/")} className="cursor-pointer flex items-center">
           <PostifyLogo variant="navbar" />
@@ -152,6 +155,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
+    </>
   );
 };
 

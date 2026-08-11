@@ -35,6 +35,7 @@ const Dashboard = () => {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [commentTexts, setCommentTexts] = useState({});
   const [showCommentBox, setShowCommentBox] = useState({});
   const [likePopId, setLikePopId] = useState(null);
@@ -73,11 +74,14 @@ const Dashboard = () => {
 
     const fetchFeedPosts = async () => {
       setLoading(true);
+      setFetchError(null);
       try {
         const response = await getFeedPostsAPI();
         setPosts(response.data.data);
       } catch (error) {
-        toast.error(error.response?.data?.message || "Failed to load feed");
+        const msg = error.response?.data?.message || "Unable to connect to server. Please check your connection.";
+        setFetchError(msg);
+        toast.error(msg);
       } finally {
         setLoading(false);
       }
@@ -258,18 +262,9 @@ const Dashboard = () => {
                   <h3 className="font-bold text-slate-900 dark:text-white text-lg">
                     {user.fullName}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
                     {user.email}
                   </p>
-
-                  {user.role === "admin" && (
-                    <div className="w-full bg-slate-100 dark:bg-[#141D33] p-2.5 rounded-2xl text-center border border-slate-200/60 dark:border-[#1C2A4A]">
-                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-1">
-                        Admin <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
-                      </p>
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500">Account Type</p>
-                    </div>
-                  )}
                 </div>
               </div>
             ) : (
@@ -346,45 +341,47 @@ const Dashboard = () => {
             {/* Feed Posts List */}
             <div className="space-y-6">
               {loading ? (
-                <div className="space-y-6">
-                  {[1, 2, 3].map((n) => (
-                    <div
-                      key={n}
-                      className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-6 rounded-3xl animate-shimmer"
-                    >
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-11 h-11 bg-slate-200 dark:bg-[#141D33] rounded-2xl animate-pulse shrink-0" />
-                        <div className="space-y-2 flex-1">
-                          <div className="h-4 w-36 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
-                          <div className="h-3 w-24 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
-                        </div>
-                      </div>
-                      <div className="space-y-2 mb-4">
-                        <div className="h-4 w-full bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
-                        <div className="h-4 w-4/5 bg-slate-200 dark:bg-[#141D33] rounded-md animate-pulse" />
-                      </div>
-                      <div className="h-52 w-full bg-slate-200 dark:bg-[#141D33] rounded-2xl animate-pulse" />
-                    </div>
-                  ))}
+                <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-12 rounded-3xl shadow-xs text-center flex flex-col items-center justify-center gap-3">
+                  <svg className="animate-spin h-8 w-8 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                    Loading Community Feed...
+                  </p>
+                </div>
+              ) : fetchError ? (
+                <div className="text-center bg-white dark:bg-[#0D1424] border border-red-200 dark:border-red-900/50 p-10 rounded-3xl shadow-xs">
+                  <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+                    Failed to Load Feed
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 max-w-md mx-auto">
+                    {fetchError}
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+                  >
+                    Retry Loading
+                  </button>
                 </div>
               ) : posts.length === 0 ? (
-                <div className="text-center bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-12 rounded-3xl shadow-xs">
-                  <FolderOpen className="w-12 h-12 text-slate-400 dark:text-slate-500 stroke-1 mx-auto mb-3" />
-                  <p className="text-slate-600 dark:text-slate-300 font-semibold text-lg">
-                    No posts available right now!
-                  </p>
-                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                    Be the first one to create a post and inspire the community.
-                  </p>
-                  {user && (
-                    <button
-                      onClick={() => navigate("/create")}
-                      className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition inline-flex items-center gap-1.5 shadow-xs"
-                    >
-                      <Plus className="w-4 h-4" /> Create First Post
-                    </button>
-                  )}
-                </div>
+                <EmptyState
+                  icon={FolderOpen}
+                  title="No posts available right now!"
+                  description="Be the first one to create a post and inspire the community."
+                  actionButton={
+                    user ? (
+                      <button
+                        onClick={() => navigate("/create")}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <Plus className="w-4 h-4" /> Create First Post
+                      </button>
+                    ) : null
+                  }
+                />
               ) : (
                 posts.map((post) => {
                   const isLikedByCurrentUser =

@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { X, Sparkles, Pause } from "lucide-react";
 import PostifyHeaderBanner from "./PostifyHeaderBanner.jsx";
 
-const DURATION_SECONDS = 30;
+const DURATION_SECONDS = 15;
 
 export const PostifyHeroSection = () => {
   const [isVisible, setIsVisible] = useState(() => {
     return sessionStorage.getItem("postify_hide_hero") !== "true";
   });
   const [timeLeft, setTimeLeft] = useState(DURATION_SECONDS);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     if (!isVisible) return;
 
-    // If mouse is hovered, timer pauses
-    if (isHovered) return;
+    // If timer is paused via click, stop countdown
+    if (isPaused) return;
 
     if (timeLeft <= 0) {
       handleDismiss();
@@ -28,14 +28,19 @@ export const PostifyHeroSection = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isVisible, isHovered, timeLeft]);
+  }, [isVisible, isPaused, timeLeft]);
 
-  const handleDismiss = () => {
+  const handleDismiss = (e) => {
+    if (e) e.stopPropagation();
     setIsFadingOut(true);
     setTimeout(() => {
       sessionStorage.setItem("postify_hide_hero", "true");
       setIsVisible(false);
     }, 350);
+  };
+
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
   if (!isVisible) return null;
@@ -44,16 +49,18 @@ export const PostifyHeroSection = () => {
 
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`mb-8 relative overflow-hidden bg-gradient-to-r from-slate-100/95 via-white to-slate-100/90 dark:from-[#0D1424] dark:via-[#111A2E] dark:to-[#0A0F1D] border border-slate-200/80 dark:border-[#1C2A4A] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm transition-all duration-300 ${
+      onClick={togglePause}
+      title={isPaused ? "Click to resume timer" : "Click to pause timer"}
+      className={`mb-8 relative overflow-hidden bg-gradient-to-r from-slate-100/95 via-white to-slate-100/90 dark:from-[#0D1424] dark:via-[#111A2E] dark:to-[#0A0F1D] border border-slate-200/80 dark:border-[#1C2A4A] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm transition-all duration-300 cursor-pointer ${
         isFadingOut ? "opacity-0 scale-95 max-h-0 py-0 mb-0 border-none overflow-hidden" : "opacity-100 scale-100"
       }`}
     >
       {/* Auto-dismiss timer progress bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-slate-200/50 dark:bg-[#1C2A4A] overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 transition-all duration-1000 ease-linear"
+          className={`h-full bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 ${
+            isPaused ? "opacity-40" : "transition-all duration-1000 ease-linear"
+          }`}
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -77,14 +84,14 @@ export const PostifyHeroSection = () => {
           {/* Timer pill badge */}
           <span
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition ${
-              isHovered
+              isPaused
                 ? "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50"
                 : "bg-slate-100 dark:bg-[#141D33] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-[#1C2A4A]"
             }`}
           >
-            {isHovered ? (
+            {isPaused ? (
               <>
-                <Pause className="w-3 h-3 text-amber-500 animate-pulse" /> Paused on hover
+                <Pause className="w-3 h-3 text-amber-500 animate-pulse" /> Paused ({timeLeft}s)
               </>
             ) : (
               <>⏱️ Auto-closes in {timeLeft}s</>
