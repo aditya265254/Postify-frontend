@@ -15,6 +15,7 @@ import {
   Plus
 } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
+import PostifyHeroSection from "../components/PostifyHeroSection.jsx";
 import {
   getFeedPostsAPI,
   likePostAPI,
@@ -239,7 +240,10 @@ const Dashboard = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100 relative transition-colors duration-300 overflow-x-hidden">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Postify Header Hero Graphic Section (Auto-dismiss 30s / Hover pause) */}
+        <PostifyHeroSection />
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* Left Sidebar Widget */}

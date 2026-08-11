@@ -160,25 +160,33 @@ const AdminDashboard = () => {
                                 <li 
                                     key={u._id} 
                                     onClick={() => navigate(`/admin/user/${u._id}`)}
-                                    className="py-4 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-[#141D33]/60 px-4 -mx-4 cursor-pointer transition rounded-2xl"
+                                    className="py-3.5 px-4 -mx-4 flex items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-[#141D33]/60 cursor-pointer transition rounded-2xl"
                                 >
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-extrabold uppercase">
+                                    {/* User Info Left Column */}
+                                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-extrabold uppercase shrink-0">
                                             {u.fullName?.[0] || "U"}
                                         </div>
-                                        <div>
-                                            <p className="font-bold text-slate-900 dark:text-white text-sm">{u.fullName}</p>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400">{u.email}</p>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="font-bold text-slate-900 dark:text-white text-sm truncate">{u.fullName}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{u.email}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2.5">
-                                        <span className="text-xs px-3 py-1 rounded-full font-extrabold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#1C2A4A] flex items-center gap-1">
-                                            <FileText className="w-3.5 h-3.5" /> {u.postsCount !== undefined ? u.postsCount : 0} {u.postsCount === 1 ? "Post" : "Posts"}
+
+                                    {/* Badges & Actions Right Column (Fixed Alignment) */}
+                                    <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
+                                        <span className="w-24 sm:w-28 justify-center text-xs px-3 py-1 rounded-full font-extrabold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#1C2A4A] inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                                            <FileText className="w-3.5 h-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+                                            <span>{u.postsCount !== undefined ? u.postsCount : 0} {u.postsCount === 1 ? "Post" : "Posts"}</span>
                                         </span>
-                                        <span className={`text-xs px-3 py-1 rounded-full font-bold ${u.role === 'admin' ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300' : 'bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300'}`}>
+                                        <span className={`w-20 justify-center text-xs px-3 py-1 rounded-full font-bold inline-flex items-center shrink-0 uppercase tracking-wider ${
+                                            u.role === 'admin' 
+                                                ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50' 
+                                                : 'bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#1C2A4A]'
+                                        }`}>
                                             {u.role}
                                         </span>
-                                        <span className="text-slate-400 dark:text-slate-500 font-bold ml-1">›</span>
+                                        <span className="w-5 text-right text-slate-400 dark:text-slate-500 font-bold shrink-0 text-sm">›</span>
                                     </div>
                                 </li>
                             ))}

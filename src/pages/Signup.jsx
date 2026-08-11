@@ -45,7 +45,7 @@ const Signup = () => {
 
       <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12">
         <div className="bg-white dark:bg-[#0D1424] border border-slate-200/80 dark:border-[#1C2A4A] p-8 rounded-3xl shadow-xl w-full max-w-md">
-          <h2 className="text-2xl font-black text-center mb-2 text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-black text-center mb-1 text-slate-900 dark:text-white">
             Create Account
           </h2>
           <p className="text-xs text-center text-slate-500 dark:text-slate-400 mb-6">

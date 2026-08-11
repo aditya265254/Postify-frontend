@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 550" width="100%" height="100%">
+  <defs>
+    <!-- Background Circle Soft Gradient -->
+    <radialGradient id="postifyBgGlow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="70%" stop-color="#F1F5F9" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.4"/>
+    </radialGradient>
+
+    <!-- Paper Plane Main Wings Gradient -->
+    <linearGradient id="postifyPlaneMainGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="30%" stop-color="#6366F1"/>
+      <stop offset="65%" stop-color="#A855F7"/>
+      <stop offset="85%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+
+    <!-- Paper Plane Under Wing / Shadow Gradient -->
+    <linearGradient id="postifyPlaneShadowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B"/>
+      <stop offset="50%" stop-color="#312E81"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+
+    <!-- Paper Plane Right Wing Fold Gradient -->
+    <linearGradient id="postifyPlaneRightGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="60%" stop-color="#9333EA"/>
+      <stop offset="100%" stop-color="#D946EF"/>
+    </linearGradient>
+
+    <!-- 'o' Paper Plane Gradient -->
+    <linearGradient id="postifyOGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="50%" stop-color="#9333EA"/>
+      <stop offset="100%" stop-color="#F43F5E"/>
+    </linearGradient>
+
+    <!-- Stacked Layers Gradient -->
+    <linearGradient id="postifyLayersGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D9488"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+
+    <!-- Drop Shadow Filter for Paper Plane -->
+    <filter id="planeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Large Soft Outer Circle Backdrop -->
+  <circle cx="350" cy="275" r="230" fill="url(#postifyBgGlow)" stroke="#E2E8F0" stroke-width="1.5" />
+
+  <!-- HEADER TEXT BRANDING SECTION -->
+  <g id="brandHeading" transform="translate(350, 140)">
+    <!-- Letter P -->
+    <text x="-145" y="0" font-family="system-ui, -apple-system, 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="64" fill="#334155" letter-spacing="-1">P</text>
+
+    <!-- 'o' with embedded Paper Plane -->
+    <g transform="translate(-76, -21)">
+      <!-- Outer o circle ring -->
+      <circle cx="0" cy="0" r="25" fill="#FFFFFF" stroke="#334155" stroke-width="6.5" />
+      <!-- Paper Plane inside o -->
+      <g transform="translate(0, 1) scale(0.95)">
+        <path d="M -13 9 L 14 -12 L 3 13 L -3 3 Z" fill="url(#postifyOGradient)" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+        <path d="M 14 -12 L -3 3 L -3 13 Z" fill="#312E81" opacity="0.6" />
+        <path d="M -3 3 L 3 13" stroke="#FFFFFF" stroke-width="1.2" opacity="0.8" />
+      </g>
+    </g>
+
+    <!-- Letters stify -->
+    <text x="-42" y="0" font-family="system-ui, -apple-system, 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="64" fill="#334155" letter-spacing="-1">stify</text>
+
+    <!-- Tagline: Community Driven Publishing -->
+    <text x="0" y="42" text-anchor="middle" font-family="system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="17" fill="#64748B" letter-spacing="1.5">Community Driven Publishing</text>
+  </g>
+
+  <!-- MAIN FLYING PAPER PLANE GRAPHIC -->
+  <g id="mainPaperPlane" filter="url(#planeShadow)">
+    <!-- Stacked Layers / Card Stack Icon at Launch Base -->
+    <g id="stackedLayers" transform="translate(290, 410)">
+      <!-- Bottom Layer -->
+      <path d="M -26 24 L 0 11 L 26 24 L 0 37 Z" fill="#F0FDFA" stroke="url(#postifyLayersGrad)" stroke-width="4.5" stroke-linejoin="round" />
+      <!-- Middle Layer -->
+      <path d="M -26 12 L 0 -1 L 26 12 L 0 25 Z" fill="#CCFBF1" stroke="url(#postifyLayersGrad)" stroke-width="4.5" stroke-linejoin="round" />
+      <!-- Top Layer -->
+      <path d="M -26 0 L 0 -13 L 26 0 L 0 13 Z" fill="#99F6E4" stroke="url(#postifyLayersGrad)" stroke-width="4.5" stroke-linejoin="round" />
+    </g>
+
+    <!-- The Big Paper Plane -->
+    <g transform="translate(0, 0)">
+      <!-- Underbody / Shadow Fold (Left Wing underside) -->
+      <path d="M 260 285 L 435 205 L 305 370 Z" fill="url(#postifyPlaneShadowGrad)" stroke="#0F172A" stroke-width="4" stroke-linejoin="round" />
+
+      <!-- Right Wing Fold -->
+      <path d="M 435 205 L 305 370 L 340 330 Z" fill="url(#postifyPlaneRightGrad)" stroke="#0F172A" stroke-width="4" stroke-linejoin="round" />
+
+      <!-- Main Left Wing Top Body -->
+      <path d="M 260 285 L 435 205 L 305 370 Z" fill="url(#postifyPlaneMainGrad)" stroke="#0F172A" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round" />
+
+      <!-- Main Center Spine Line -->
+      <path d="M 260 285 L 435 205" stroke="#0F172A" stroke-width="4" stroke-linecap="round" />
+
+      <!-- Outer Wing Flap Border Highlight -->
+      <path d="M 265 287 L 430 207" stroke="#FCE7F3" stroke-width="2.5" opacity="0.6" stroke-linecap="round" />
+      
+      <!-- Golden Glow Rim Outline -->
+      <path d="M 260 285 L 435 205 L 305 370 Z" fill="none" stroke="#FDE68A" stroke-width="1.5" opacity="0.7" />
+    </g>
+  </g>
+</svg>

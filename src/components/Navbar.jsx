@@ -4,6 +4,8 @@ import { Sun, Moon, User, LogOut, Image, ShieldCheck, Plus, ChevronDown, Home } 
 import { logoutAPI } from "../config/post.api.js";
 import { useTheme } from "../context/ThemeContext";
 
+import { PostifyLogo } from "./PostifyLogo.jsx";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const Navbar = () => {
     } catch {
     }
     localStorage.clear();
+    sessionStorage.clear();
     navigate("/");
     window.location.reload();
   };
@@ -27,12 +30,9 @@ const Navbar = () => {
   return (
     <nav className="bg-white/95 dark:bg-[#090D1A]/95 border-b border-slate-200/80 dark:border-[#1C2A4A] backdrop-blur-md px-4 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 transition-colors duration-300 shadow-xs">
       <div className="flex items-center gap-6">
-        <h1
-          onClick={() => navigate("/")}
-          className="text-2xl font-black text-blue-600 dark:text-blue-500 tracking-tight cursor-pointer"
-        >
-          Postify
-        </h1>
+        <div onClick={() => navigate("/")} className="cursor-pointer flex items-center">
+          <PostifyLogo variant="navbar" />
+        </div>
 
         {!isHomePage && (
           <button
