@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { X, Sparkles, Pause } from "lucide-react";
 import PostifyHeaderBanner from "./PostifyHeaderBanner.jsx";
 
