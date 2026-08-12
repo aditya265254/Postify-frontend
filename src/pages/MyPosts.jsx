@@ -165,8 +165,8 @@ const MyPosts = () => {
             <Navbar />
             <div className="max-w-3xl mx-auto mt-8 px-4">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Image className="w-6 h-6 text-blue-600 dark:text-blue-400" /> Manage My Posts
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <Image className="w-6 h-6 text-zinc-500 dark:text-zinc-500" /> Manage My Posts
                     </h2>
                     <button 
                         onClick={() => navigate('/create')} 
