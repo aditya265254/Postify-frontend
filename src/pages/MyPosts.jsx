@@ -158,7 +158,7 @@ const MyPosts = () => {
         } finally {
             setAppealLoading(false);
         }
-    };
+    }; 
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-slate-100 pb-10 relative transition-colors duration-300">
@@ -207,6 +207,7 @@ const MyPosts = () => {
                                 onChange={(e) => setEditContent(e.target.value)}
                                 className="w-full bg-slate-50 dark:bg-[#141D33] border border-slate-200 dark:border-[#1C2A4A] rounded-2xl px-4 py-3 mb-4 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 resize-none"
                                 rows="4"
+                                
                                 placeholder="Edit your content here..."
                             />
                             
