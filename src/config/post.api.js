@@ -2,9 +2,7 @@ import api from "./api.js";
 export const getFeedPostsAPI = () => api.get("/posts/feed");
 
 export const createPostAPI = (formData) => {
-  return api.post("/posts/create", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return api.post("/posts/create", formData);
 };
 
 export const likePostAPI = (postId) => api.patch(`/posts/like/${postId}`);
@@ -19,9 +17,7 @@ export const commentPostAPI = (postId, content) =>
   api.patch(`/posts/comment/${postId}`, { content });
 
 export const updatePostAPI = (postId, formData) => {
-  return api.patch(`/posts/update/${postId}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  return api.patch(`/posts/update/${postId}`, formData);
 };
 
 export const appealPostAPI = (postId, userClarification) => {

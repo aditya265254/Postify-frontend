@@ -59,6 +59,8 @@ const CreatePost = () => {
                 </h2>
 
                 <MyPostList posts={posts} setPosts={setPosts} />
+
+                
             </div>
         </div>
     );

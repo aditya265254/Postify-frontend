@@ -1,7 +1,8 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Plus, ImagePlus, X, Crop } from "lucide-react";
 import FormTextArea from "../common/FormTextArea.jsx";
+import ImageCropper from "../common/ImageCropper.jsx";
 import { toast } from "react-toastify";
 
 
@@ -26,7 +27,15 @@ export const PostForm = ({ onSubmit, loading = false }) => {
     setImage(null);
     setPreview(null);
     setRawImageSrc(null);
+    setShowCropper(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleCropApply = (croppedFile, croppedPreview) => {
+    setImage(croppedFile);
+    setPreview(croppedPreview);
+    setRawImageSrc(croppedPreview);
+    setShowCropper(false);
   };
 
   const handleFormSubmit = async (data) => {
@@ -75,6 +84,14 @@ export const PostForm = ({ onSubmit, loading = false }) => {
             >
               <X className="w-4 h-4" />
             </button>
+            <button
+              type="button"
+              onClick={() => setShowCropper(true)}
+              className="absolute top-2.5 right-14 bg-slate-900/75 hover:bg-slate-800 text-white rounded-xl p-1.5 transition cursor-pointer backdrop-blur-sm flex items-center gap-1 px-2.5 text-xs font-semibold"
+              title="Crop image"
+            >
+              <Crop className="w-3.5 h-3.5" /> Crop
+            </button>
             <div className="absolute bottom-2.5 left-2.5 bg-slate-900/60 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg backdrop-blur-sm">
               {image?.name?.length > 28 ? image.name.substring(0, 28) + "..." : image?.name}
             </div>
@@ -82,22 +99,33 @@ export const PostForm = ({ onSubmit, loading = false }) => {
         )}
 
         {/* File Input & Submit Action */}
-        <div className="flex items-center justify-between gap-4">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-            id="post-image-input"
-          />
-          <label
-            htmlFor="post-image-input"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1C2A4A] border border-slate-200 dark:border-[#1C2A4A] transition cursor-pointer"
-          >
-            <ImagePlus className="w-4 h-4" />
-            {image ? "Change Image" : "Add Image"}
-          </label>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+              id="post-image-input"
+            />
+            <label
+              htmlFor="post-image-input"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1C2A4A] border border-slate-200 dark:border-[#1C2A4A] transition cursor-pointer"
+            >
+              <ImagePlus className="w-4 h-4" />
+              {image ? "Change Image" : "Add Image"}
+            </label>
+            {preview && (
+              <button
+                type="button"
+                onClick={() => setShowCropper(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-[#141D33] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1C2A4A] border border-slate-200 dark:border-[#1C2A4A] transition cursor-pointer"
+              >
+                Crop
+              </button>
+            )}
+          </div>
 
           <button
             type="submit"
@@ -107,6 +135,13 @@ export const PostForm = ({ onSubmit, loading = false }) => {
             {loading ? "Publishing..." : "Publish Post"}
           </button>
         </div>
+        <ImageCropper
+          imageSrc={rawImageSrc}
+          open={showCropper}
+          onClose={() => setShowCropper(false)}
+          onApply={handleCropApply}
+          fileName={image?.name ?? "post-image.jpg"}
+        />
       </form>
     </div>
   );

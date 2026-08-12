@@ -1,21 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Image, Plus, Crop, X, ImagePlus, Check } from "lucide-react";
-import Cropper from "react-easy-crop";
+import { Image, Plus, Crop, X, ImagePlus } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import MyPostList from "../components/MyPostList.jsx";
 import ConfirmModal from "../components/modals/ConfirmModal.jsx";
+import ImageCropper from "../components/common/ImageCropper.jsx";
 import { getMyPostsAPI, deletePostAPI, updatePostAPI, appealPostAPI } from "../config/post.api.js";
-import { getCroppedImg } from "../utils/cropImage.js";
-
-const ASPECT_RATIOS = [
-    { label: "Free", value: null },
-    { label: "1:1", value: 1 / 1 },
-    { label: "4:3", value: 4 / 3 },
-    { label: "16:9", value: 16 / 9 },
-    { label: "3:4", value: 3 / 4 },
-];
 
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
@@ -32,11 +23,6 @@ const MyPosts = () => {
     // Cropper State for Edit
     const [showCropper, setShowCropper] = useState(false);
     const [rawImageSrc, setRawImageSrc] = useState(null);
-    const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(1);
-    const [aspectRatio, setAspectRatio] = useState(null);
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-
     const editFileInputRef = useRef(null);
     
     // Delete Confirmation Modal State
@@ -49,11 +35,6 @@ const MyPosts = () => {
     
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!localStorage.getItem("token")) return navigate('/');
-        fetchMyPosts();
-    }, [navigate]);
-
     const fetchMyPosts = async () => {
         setLoading(true);
         try {
@@ -65,6 +46,11 @@ const MyPosts = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (!localStorage.getItem("token")) return navigate('/');
+        fetchMyPosts();
+    }, [navigate]);
 
     const handleDelete = (postId) => {
         setDeleteModal({ isOpen: true, postId });
@@ -101,26 +87,17 @@ const MyPosts = () => {
         if (!file) return;
         const objectUrl = URL.createObjectURL(file);
         setRawImageSrc(objectUrl);
-        setCrop({ x: 0, y: 0 });
-        setZoom(1);
-        setShowCropper(true);
+        setEditImage(file);
+        setEditPreview(objectUrl);
+        setRemoveExistingImage(false);
     };
 
-    const onCropComplete = useCallback((_, croppedPixels) => {
-        setCroppedAreaPixels(croppedPixels);
-    }, []);
-
-    const handleCropDone = async () => {
-        try {
-            const croppedBlob = await getCroppedImg(rawImageSrc, croppedAreaPixels);
-            const croppedFile = new File([croppedBlob], "edited-image.jpg", { type: "image/jpeg" });
-            setEditImage(croppedFile);
-            setEditPreview(URL.createObjectURL(croppedBlob));
-            setRemoveExistingImage(false);
-            setShowCropper(false);
-        } catch {
-            toast.error("Crop failed. Please try again.");
-        }
+    const handleCropApply = (croppedFile, croppedPreview) => {
+        setEditImage(croppedFile);
+        setEditPreview(croppedPreview);
+        setRawImageSrc(croppedPreview);
+        setRemoveExistingImage(false);
+        setShowCropper(false);
     };
 
     const handleRemoveImage = () => {
@@ -147,7 +124,12 @@ const MyPosts = () => {
             const response = await updatePostAPI(editingPost._id, formData);
             toast.success("Post updated successfully!");
             
-            setPosts(posts.map(p => p._id === editingPost._id ? response.data.data : p));
+            const updatedPost = response.data.data;
+            if (updatedPost?.imageUrl) {
+                updatedPost.imageUrl = `${updatedPost.imageUrl}?t=${Date.now()}`;
+            }
+
+            setPosts(posts.map(p => p._id === editingPost._id ? updatedPost : p));
             setEditingPost(null);
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update post");
@@ -253,12 +235,7 @@ const MyPosts = () => {
                                         {/* Crop Button */}
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                setRawImageSrc(editPreview);
-                                                setCrop({ x: 0, y: 0 });
-                                                setZoom(1);
-                                                setShowCropper(true);
-                                            }}
+                                            onClick={() => setShowCropper(true)}
                                             className="absolute top-2.5 right-12 bg-slate-900/75 hover:bg-slate-900 text-white rounded-xl p-1.5 transition cursor-pointer backdrop-blur-sm flex items-center gap-1 px-2.5 text-xs font-semibold"
                                             title="Crop image"
                                         >
@@ -284,89 +261,13 @@ const MyPosts = () => {
                                 </label>
                             </div>
 
-                            {/* CROPPER OVERLAY */}
-                            {showCropper && rawImageSrc && (
-                                <div className="fixed inset-0 bg-slate-950/90 z-[60] flex flex-col justify-between p-4 sm:p-6 backdrop-blur-sm">
-                                    <div className="flex justify-between items-center text-white z-10">
-                                        <span className="font-bold text-sm flex items-center gap-1.5">
-                                            <Crop className="w-4 h-4 text-blue-400" /> Crop & Adjust Image
-                                        </span>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowCropper(false)}
-                                            className="p-1 rounded-full hover:bg-slate-800 transition"
-                                        >
-                                            <X className="w-5 h-5 text-slate-400" />
-                                        </button>
-                                    </div>
-
-                                    {/* Cropper Container */}
-                                    <div className="relative w-full h-[55vh] rounded-2xl overflow-hidden my-4 border border-slate-800">
-                                        <Cropper
-                                            image={rawImageSrc}
-                                            crop={crop}
-                                            zoom={zoom}
-                                            aspect={aspectRatio}
-                                            onCropChange={setCrop}
-                                            onZoomChange={setZoom}
-                                            onCropComplete={onCropComplete}
-                                        />
-                                    </div>
-
-                                    {/* Controls */}
-                                    <div className="space-y-4 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl z-10 max-w-xl mx-auto w-full">
-                                        <div className="flex items-center gap-3 text-white text-xs">
-                                            <span className="font-semibold shrink-0">Aspect Ratio:</span>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {ASPECT_RATIOS.map((ratio) => (
-                                                    <button
-                                                        key={ratio.label}
-                                                        type="button"
-                                                        onClick={() => setAspectRatio(ratio.value)}
-                                                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
-                                                            aspectRatio === ratio.value
-                                                                ? "bg-blue-600 text-white"
-                                                                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                                                        }`}
-                                                    >
-                                                        {ratio.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-3 text-white text-xs">
-                                            <span className="font-semibold shrink-0">Zoom:</span>
-                                            <input
-                                                type="range"
-                                                min={1}
-                                                max={3}
-                                                step={0.1}
-                                                value={zoom}
-                                                onChange={(e) => setZoom(Number(e.target.value))}
-                                                className="w-full accent-blue-500 cursor-pointer"
-                                            />
-                                        </div>
-
-                                        <div className="flex justify-end gap-3 pt-1 border-t border-slate-800">
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowCropper(false)}
-                                                className="px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={handleCropDone}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-md shadow-blue-500/20"
-                                            >
-                                                <Check className="w-3.5 h-3.5" /> Apply Crop
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            <ImageCropper
+                                imageSrc={rawImageSrc}
+                                open={showCropper}
+                                onClose={() => setShowCropper(false)}
+                                onApply={handleCropApply}
+                                fileName="edited-image.jpg"
+                            />
 
                             <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-[#1C2A4A] pt-4">
                                 <button
